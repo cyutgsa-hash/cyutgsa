@@ -50,7 +50,7 @@ nav a:hover{color:var(--accent)}
 .hero-text{display:flex;flex-direction:column;gap:28px}
 .hero .kicker{display:flex;align-items:center;gap:12px}
 .hero .kicker::before{content:"";width:40px;height:2px;background:var(--accent)}
-.hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(44px,6vw,84px);line-height:1.15}
+.hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(36px,5.2vw,72px);line-height:1.2}
 .hero p{font-size:19px;line-height:1.9;color:var(--text);max-width:34em}
 .btns{display:flex;flex-wrap:wrap;gap:16px}
 .btn{display:inline-flex;align-items:center;min-height:52px;padding:0 32px;border-radius:999px;font-weight:700;font-size:17px;text-decoration:none}
@@ -59,6 +59,9 @@ nav a:hover{color:var(--accent)}
 .hero-art{position:relative;height:560px}
 .arch{position:absolute;right:0;top:0;width:min(460px,90%);height:500px;border-radius:240px 240px 16px 16px;background:var(--sand);display:grid;place-items:center;text-align:center;color:var(--muted);font-size:15px;overflow:hidden}
 .arch img{width:100%;height:100%;object-fit:cover}
+.arch.badge{left:0;right:auto;width:min(500px,86%);height:auto;aspect-ratio:1/1;border-radius:50%;background:#FFDE59}
+.hero-art:has(.badge){height:700px}
+.hero-art:has(.badge) .count{left:auto;right:0}
 .count{position:absolute;left:20px;bottom:0;width:240px;height:200px;border-radius:16px;background:var(--ink);color:var(--ground);padding:28px;display:flex;flex-direction:column;justify-content:space-between}
 .count span{font-size:14px;color:#CDBFA9}
 .count strong{font-family:var(--serif);font-weight:900;font-size:64px;line-height:1}
@@ -155,6 +158,10 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
   .hero,.faq{grid-template-columns:1fr}
   .hero-art{height:460px}
   .arch{height:420px}
+  .hero-art:has(.badge){height:auto;display:flex;flex-direction:column;align-items:center;gap:24px}
+  .hero-art:has(.badge) .arch,.hero-art:has(.badge) .count{position:static}
+  .arch.badge{width:min(420px,100%)}
+  .hero-art:has(.badge) .count{width:100%;max-width:420px;height:auto;gap:8px}
   .grid3{grid-template-columns:1fr}
   .steps{grid-template-columns:1fr}
   .steps li,.steps li:nth-child(3n+1){border-left:none;padding-left:0;border-bottom:1px solid var(--line)}
@@ -197,7 +204,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
 <main>
   <section id="top" class="hero">
     <div class="hero-text">
-      <span class="kicker">116 級 畢業季</span>
+      <span class="kicker">116 級畢業季｜32 逐光</span>
       <h1>把最後一年，<br>好好收進回憶裡。</h1>
       <p>我們是朝陽科技大學畢業班學生聯誼會。從學士服、畢業照、大團拍到畢業典禮，陪每一位畢業生走完在朝陽的最後一段路。</p>
       <div class="btns">
@@ -206,8 +213,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
       </div>
     </div>
     <div class="hero-art">
-      <!-- 換成照片：<img src="images/hero.jpg" alt="畢業大團拍"> -->
-      <div class="arch">[畢業大團拍照片]<br>建議尺寸 920 × 1000</div>
+      <div class="arch badge"><img src="images/logo-32.jpg" alt="第 32 屆畢業班學生聯誼會「逐光」標誌" width="1000" height="1000"></div>
       <div class="count">
         <span>距離畢業典禮</span>
         <div><strong id="days">--</strong> 天</div>
@@ -293,7 +299,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
   </section>
 
   <section id="team">
-    <div class="sec-head"><span class="kicker">TEAM</span><h2 class="h2">第 [XX] 屆 幹部介紹</h2></div>
+    <div class="sec-head"><span class="kicker">TEAM</span><h2 class="h2">第 32 屆 幹部介紹</h2></div>
     <ul class="team team-lead" aria-label="會長團">
       <li class="member lead"><b>會長</b><strong>龔郁亭</strong></li>
       <li class="member lead"><b>副會長</b><strong>石明煒</strong></li>

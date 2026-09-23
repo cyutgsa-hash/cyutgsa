@@ -80,7 +80,7 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
     <p>輸入學號和姓名，確認自己是否已繳交畢聯會會費。</p>
     <ul>
       <li>姓名請輸入完整中文姓名。</li>
-      <li>名單由畢聯會定期更新，剛繳費可能要過幾天才查得到。</li>
+      <li>名單由畢聯會幹部登記，剛繳費可能要過一兩天才查得到。</li>
       <li>查詢結果有誤，請帶繳費收據私訊 <a href="https://www.instagram.com/cyutgsa/" target="_blank" rel="noopener">IG @cyutgsa</a>，或在值班時間（每週二至週四 13:30–20:00）到第一宿舍大樓 10F R-1011 會辦找我們。</li>
     </ul>
   </div>
@@ -108,31 +108,14 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
 </footer>
 
 <script>
-  // ⚠ 這個 SALT 必須和 tools/convert.html 裡的一模一樣，改了兩邊都要改，並重新產生 data/fee.json
-  const SALT = "cyutgsa-116";
-
-  const normId = s => s.normalize("NFKC").replace(/\s+/g, "").toUpperCase();
-  const normName = s => s.normalize("NFKC").replace(/\s+/g, "");
-
-  async function keyOf(id, name) {
-    const buf = await crypto.subtle.digest("SHA-256",
-      new TextEncoder().encode(SALT + "|" + normId(id) + "|" + normName(name)));
-    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
-  }
+  // ▼ 貼上 Google Apps Script「網頁應用程式」的網址（https://script.google.com/macros/s/.../exec）
+  const API_URL = "";
 
   const $ = id => document.getElementById(id);
-  let data = null;
+  const clean = s => s.normalize("NFKC").replace(/\s+/g, "");
+  const CLOSED = "名單尚未開放查詢，請留意畢聯會 IG 公告。";
 
-  fetch("data/fee.json", { cache: "no-store" })
-    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(j => {
-      data = j;
-      const n = Object.keys(j.records || {}).length;
-      $("meta").textContent = n
-        ? `名單更新時間：${j.updated || "—"}　共 ${n} 筆資料`
-        : "名單尚未開放查詢，請留意畢聯會 IG 公告。";
-    })
-    .catch(() => { $("meta").textContent = "名單尚未開放查詢，請留意畢聯會 IG 公告。"; });
+  $("meta").textContent = API_URL ? "名單直接連線畢聯會的 Google 試算表，隨時更新。" : CLOSED;
 
   function show(cls, status, detail) {
     const r = $("result");
@@ -146,21 +129,28 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
 
   $("form").addEventListener("submit", async e => {
     e.preventDefault();
-    const id = $("sid").value, name = $("sname").value;
-    if (!normId(id) || !normName(name)) { show("none", "請輸入學號和姓名", "兩個欄位都要填才能查詢。"); return; }
-    if (!data || !Object.keys(data.records || {}).length) { show("none", "名單尚未開放", "畢聯會還沒上傳繳費名單，請留意 IG 公告。"); return; }
+    const id = clean($("sid").value).toUpperCase(), name = clean($("sname").value);
+    if (!id || !name) { show("none", "請輸入學號和姓名", "兩個欄位都要填才能查詢。"); return; }
+    if (!API_URL) { show("none", "名單尚未開放", "畢聯會還沒開放查詢，請留意 IG 公告。"); return; }
 
-    $("go").disabled = true;
+    $("go").disabled = true; $("go").textContent = "查詢中…";
     try {
-      const rec = data.records[await keyOf(id, name)];
-      if (!rec) {
+      const url = API_URL + "?id=" + encodeURIComponent(id) + "&name=" + encodeURIComponent(name);
+      const res = await (await fetch(url)).json();
+      if (res.error) {
+        show("none", "暫時無法查詢", "系統忙碌中，請稍後再試。");
+      } else if (!res.found) {
         show("none", "查無資料", "請確認學號和姓名是否輸入正確。確定沒打錯的話，請私訊畢聯會 IG。");
-      } else if (rec.p) {
-        show("ok", "已繳費", rec.d ? `繳費日期：${rec.d}` : "感謝你的支持！");
+      } else if (res.paid) {
+        show("ok", "已繳費", res.date ? "繳費日期：" + res.date : "感謝你的支持！");
       } else {
         show("no", "尚未繳費", "繳費方式請見畢聯會 IG 公告。已經繳了的話，請帶收據私訊 IG。");
       }
-    } finally { $("go").disabled = false; }
+    } catch (err) {
+      show("none", "暫時無法查詢", "連線失敗，請檢查網路後再試一次。");
+    } finally {
+      $("go").disabled = false; $("go").textContent = "查詢";
+    }
   });
 </script>
 </body>
