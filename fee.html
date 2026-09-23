@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>會費查詢｜朝陽科技大學 畢聯會</title>
+<meta name="description" content="朝陽科技大學畢業班學生聯誼會：畢聯會會費繳費查詢。">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#9A3B28; --ink:#221C17; --text:#4A3F35; --muted:#6B5F52;
+  --ground:#F5EFE4; --paper:#FFFFFF; --line:#DCD2C2;
+  --ok:#2F6B45; --ok-bg:#E6F1E8; --no:#9A3B28; --no-bg:#F9E6E0;
+  --serif:"Noto Serif TC","Songti TC",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --pad:clamp(20px,6vw,96px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.7;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+h1,h2,p{margin:0}
+
+header{border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:80px;padding:0 var(--pad)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+.logo{width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:var(--serif);font-weight:900;font-size:20px;flex:none}
+.brand b{font-family:var(--serif);font-size:18px}
+.back{display:inline-flex;align-items:center;min-height:44px;font-weight:700;text-decoration:none}
+
+main{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,96px);padding:clamp(48px,8vw,104px) var(--pad);align-items:start}
+.intro{display:flex;flex-direction:column;gap:20px}
+.intro h1{font-family:var(--serif);font-weight:900;font-size:clamp(40px,5vw,64px);line-height:1.2}
+.intro p{font-size:18px;color:var(--text);max-width:30em}
+.intro ul{margin:8px 0 0;padding-left:1.2em;color:var(--text)}
+.intro li{margin:4px 0}
+
+.panel{background:var(--paper);border-radius:20px;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;gap:24px}
+form{display:flex;flex-direction:column;gap:20px}
+label{display:flex;flex-direction:column;gap:8px;font-weight:700}
+label small{font-weight:400;color:var(--muted)}
+input{font:inherit;font-size:18px;padding:14px 16px;min-height:52px;border:1.5px solid var(--line);border-radius:10px;background:var(--ground);color:var(--ink)}
+input:focus{border-color:var(--accent);background:#fff}
+button{font:inherit;font-weight:700;font-size:18px;min-height:56px;border:none;border-radius:999px;background:var(--accent);color:#fff;cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}
+
+.result{border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:6px}
+.result[hidden]{display:none}
+.result .status{font-family:var(--serif);font-weight:900;font-size:32px;line-height:1.3}
+.result.ok{background:var(--ok-bg);color:var(--ok)}
+.result.no{background:var(--no-bg);color:var(--no)}
+.result.none{background:var(--ground);color:var(--ink)}
+.result p{color:var(--text)}
+.meta{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+
+footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+@media (max-width:860px){ main{grid-template-columns:1fr} }
+@media (max-width:480px){ .brand b{font-size:16px} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <a class="brand" href="index.html">
+      <span class="logo" aria-hidden="true">畢</span>
+      <b>朝陽科技大學 畢聯會</b>
+    </a>
+    <a class="back" href="index.html">回首頁</a>
+  </div>
+</header>
+
+<main>
+  <div class="intro">
+    <h1>會費查詢</h1>
+    <p>輸入學號和姓名，確認自己是否已繳交畢聯會會費。</p>
+    <ul>
+      <li>姓名請輸入完整中文姓名。</li>
+      <li>名單由畢聯會定期更新，剛繳費可能要過幾天才查得到。</li>
+      <li>查詢結果有誤，請帶繳費收據私訊 <a href="https://www.instagram.com/cyutgsa/" target="_blank" rel="noopener">IG @cyutgsa</a>，或在值班時間（每週二至週四 13:30–20:00）到第一宿舍大樓 10F R-1011 會辦找我們。</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <form id="form" novalidate>
+      <label>學號
+        <input id="sid" name="sid" autocomplete="off" inputmode="text" autocapitalize="characters" spellcheck="false" required placeholder="例如 11112345">
+      </label>
+      <label>姓名
+        <input id="sname" name="sname" autocomplete="name" required placeholder="例如 王小明">
+      </label>
+      <button id="go" type="submit">查詢</button>
+    </form>
+
+    <div id="result" class="result" hidden role="status" aria-live="polite"></div>
+
+    <p class="meta" id="meta">名單載入中…</p>
+  </div>
+</main>
+
+<footer>
+  <span>© 朝陽科技大學畢業班學生聯誼會</span>
+  <span>本頁只顯示繳費狀態，不會公開任何人的個人資料。</span>
+</footer>
+
+<script>
+  // ⚠ 這個 SALT 必須和 tools/convert.html 裡的一模一樣，改了兩邊都要改，並重新產生 data/fee.json
+  const SALT = "cyutgsa-116";
+
+  const normId = s => s.normalize("NFKC").replace(/\s+/g, "").toUpperCase();
+  const normName = s => s.normalize("NFKC").replace(/\s+/g, "");
+
+  async function keyOf(id, name) {
+    const buf = await crypto.subtle.digest("SHA-256",
+      new TextEncoder().encode(SALT + "|" + normId(id) + "|" + normName(name)));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  const $ = id => document.getElementById(id);
+  let data = null;
+
+  fetch("data/fee.json", { cache: "no-store" })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(j => {
+      data = j;
+      const n = Object.keys(j.records || {}).length;
+      $("meta").textContent = n
+        ? `名單更新時間：${j.updated || "—"}　共 ${n} 筆資料`
+        : "名單尚未開放查詢，請留意畢聯會 IG 公告。";
+    })
+    .catch(() => { $("meta").textContent = "名單尚未開放查詢，請留意畢聯會 IG 公告。"; });
+
+  function show(cls, status, detail) {
+    const r = $("result");
+    r.className = "result " + cls;
+    r.innerHTML = "";
+    const s = document.createElement("span"); s.className = "status"; s.textContent = status;
+    const p = document.createElement("p"); p.textContent = detail;
+    r.append(s, p);
+    r.hidden = false;
+  }
+
+  $("form").addEventListener("submit", async e => {
+    e.preventDefault();
+    const id = $("sid").value, name = $("sname").value;
+    if (!normId(id) || !normName(name)) { show("none", "請輸入學號和姓名", "兩個欄位都要填才能查詢。"); return; }
+    if (!data || !Object.keys(data.records || {}).length) { show("none", "名單尚未開放", "畢聯會還沒上傳繳費名單，請留意 IG 公告。"); return; }
+
+    $("go").disabled = true;
+    try {
+      const rec = data.records[await keyOf(id, name)];
+      if (!rec) {
+        show("none", "查無資料", "請確認學號和姓名是否輸入正確。確定沒打錯的話，請私訊畢聯會 IG。");
+      } else if (rec.p) {
+        show("ok", "已繳費", rec.d ? `繳費日期：${rec.d}` : "感謝你的支持！");
+      } else {
+        show("no", "尚未繳費", "繳費方式請見畢聯會 IG 公告。已經繳了的話，請帶收據私訊 IG。");
+      }
+    } finally { $("go").disabled = false; }
+  });
+</script>
+</body>
+</html>
