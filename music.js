@@ -8,6 +8,13 @@
   const inShell = (() => { try { return window.parent !== window && !!window.parent.document.getElementById(FRAME_ID); } catch (e) { return false; } })();
   const isShell = !!document.getElementById(FRAME_ID);
 
+  // 0) 外框被載入到自己的框裡（例如舊連結指向 index.html）：直接改載入要去的頁面，避免畫面空白
+  if (inShell && isShell) {
+    const want = decodeURIComponent(location.hash.slice(1));
+    location.replace(/^[\w-]+\.html/.test(want) ? want : "home.html");
+    return;
+  }
+
   // 1) 在外框裡的頁面：不放播放器，只留出底部空間，點擊時通知外框開始播放
   if (inShell) {
     const st = document.createElement("style");
@@ -30,7 +37,7 @@
   const frame = document.getElementById(FRAME_ID);
   const SAFE = /^([\w-]+\.html)(\?[\w=&%-]*)?(#[\w-]*)?$/;
   const start = decodeURIComponent(location.hash.slice(1));
-  frame.src = SAFE.test(start) ? start : "home.html";
+  frame.src = SAFE.test(start) && !/^index\.html/.test(start) ? start : "home.html";
   frame.addEventListener("load", () => {
     try {
       const w = frame.contentWindow, loc = w.location;
