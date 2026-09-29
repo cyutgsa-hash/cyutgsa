@@ -1,7 +1,49 @@
 /* 畢聯會背景音樂＋歌詞（所有頁面共用）
- * 在每個頁面的 </body> 前加一行：<script src="music.js"></script>
+ * 網站外框 index.html 負責播放音樂，各頁面（home.html、fee.html、booking.html…）在框裡切換，
+ * 換頁時音樂不會中斷。每個頁面的 </body> 前都要有：<script src="music.js"></script>
  * 音檔：music/bgm.mp3
  */
+(function () {
+  const FRAME_ID = "page";
+  const inShell = (() => { try { return window.parent !== window && !!window.parent.document.getElementById(FRAME_ID); } catch (e) { return false; } })();
+  const isShell = !!document.getElementById(FRAME_ID);
+
+  // 1) 在外框裡的頁面：不放播放器，只留出底部空間，點擊時通知外框開始播放
+  if (inShell) {
+    const st = document.createElement("style");
+    st.textContent = "body{padding-bottom:96px}";
+    document.head.appendChild(st);
+    ["pointerdown", "keydown", "touchstart"].forEach(ev => addEventListener(ev, () => {
+      try { window.parent.__bgmKick && window.parent.__bgmKick({}); } catch (e) {}
+    }, { capture: true, passive: true }));
+    return;
+  }
+
+  // 2) 直接打開某個頁面（例如別人分享 booking.html 的連結）：轉到外框，音樂才能跨頁接續
+  if (!isShell) {
+    const file = location.pathname.split("/").pop() || "home.html";
+    location.replace("index.html#" + file + location.search.replace(/^\?/, "?") + location.hash.replace(/^#/, "#"));
+    return;
+  }
+
+  // 3) 外框本身：放播放器和歌詞
+  const frame = document.getElementById(FRAME_ID);
+  const SAFE = /^([\w-]+\.html)(\?[\w=&%-]*)?(#[\w-]*)?$/;
+  const start = decodeURIComponent(location.hash.slice(1));
+  frame.src = SAFE.test(start) ? start : "home.html";
+  frame.addEventListener("load", () => {
+    try {
+      const w = frame.contentWindow, loc = w.location;
+      const path = loc.pathname.split("/").pop() + loc.search + loc.hash;
+      history.replaceState(null, "", "#" + path);
+      document.title = w.document.title;
+    } catch (e) {}
+  });
+
+  initPlayer();
+
+  function initPlayer() {
+
 (function () {
   if (document.getElementById("player")) return;
   const style = document.createElement("style");
@@ -10,7 +52,7 @@
   const wrap = document.createElement("div");
   wrap.innerHTML = "<div class=\"player\" id=\"player\" hidden>\n  <button id=\"mplay\" type=\"button\" aria-label=\"播放音樂\">\n    <svg id=\"icon-play\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M7 4.5v15l13-7.5z\"/></svg>\n    <svg id=\"icon-pause\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\" style=\"display:none\"><rect x=\"6\" y=\"4.5\" width=\"4\" height=\"15\" rx=\"1\"/><rect x=\"14\" y=\"4.5\" width=\"4\" height=\"15\" rx=\"1\"/></svg>\n  </button>\n  <div class=\"info\">\n    <b id=\"mtitle\">32 逐光</b>\n    <span id=\"mtime\">0:00</span>\n  </div>\n  <span class=\"eq\" aria-hidden=\"true\"><i></i><i></i><i></i></span>\n  <button class=\"mute\" id=\"mmute\" type=\"button\" aria-label=\"靜音\">\n    <svg id=\"icon-vol\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 9v6h4l5 4V5L8 9z\"/><path d=\"M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12\"/></svg>\n    <svg id=\"icon-muted\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" style=\"display:none\"><path d=\"M4 9v6h4l5 4V5L8 9z\"/><path d=\"M17 9l5 6M22 9l-5 6\"/></svg>\n  </button>\n  <button class=\"lyr-btn\" id=\"mlyr\" type=\"button\" aria-haspopup=\"dialog\">歌詞</button>\n  <input id=\"mvol\" type=\"range\" min=\"0\" max=\"100\" value=\"50\" aria-label=\"音量\">\n  <audio id=\"bgm\" src=\"music/bgm.mp3\" loop preload=\"metadata\"></audio>\n</div>" + "<dialog class=\"lyrics\" id=\"lyrics\" aria-labelledby=\"ly-title\">\n  <div class=\"ly-head\">\n    <div><h2 id=\"ly-title\">32屆逐光畢聯會</h2><p>畢聯會主題曲・歌詞</p></div>\n    <div class=\"ly-tools\">\n      <button class=\"ly-play\" id=\"ly-play\" type=\"button\" aria-label=\"播放音樂\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M7 4.5v15l13-7.5z\"/></svg></button>\n      <button class=\"ly-close\" id=\"ly-close\" type=\"button\" aria-label=\"關閉歌詞\">×</button>\n    </div>\n  </div>\n  <div class=\"ly-body\">\n    <div class=\"ly-legend\"><span class=\"ly-v ly-m\">男</span><span class=\"ly-v ly-f\">女</span><span class=\"ly-v ly-duet\">男女</span><span class=\"ly-v ly-all\">全員</span></div>\n<section class=\"ly-sec\"><h3>Intro<small>男聲</small></h3>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>Hey！</p>\n<p class=\"ly-m\">誰說站在台前<br>才叫做主角？</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>有些故事<br>總要有人在背後<br>把它變得更精彩。</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>32<br>逐光畢聯會！</p>\n</section>\n<section class=\"ly-sec\"><h3>Verse 1<small>男聲</small></h3>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>一個想法<br>從一句「要不要試試看」</p>\n<p class=\"ly-m\">變成一場活動<br>再變成大家期待的那一天</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>一通電話<br>一個訊息<br>一張張行程表</p>\n<p class=\"ly-f\">有人找場地<br>有人想企劃<br>有人忙到手機都沒電啦</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>有人負責衝<br>有人負責想</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>有人在大家看不到的地方<br>把細節一項一項補上</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>我們不是為了站在聚光燈下<br>我們只是想把事情做好啊</p>\n</section>\n<section class=\"ly-sec\"><h3>Pre-Chorus<small>女聲</small></h3>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>你說想要一場<br>值得記住的活動</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>那我們就想辦法<br>把它變成真的</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>你說還差一點</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>那我們再改一遍</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>因為你們的期待<br>就是我們前進的理由</p>\n</section>\n<section class=\"ly-sec\"><h3>Chorus<small>男女</small></h3>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>32！</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>逐光！</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>畢聯會！</p>\n<p class=\"ly-duet\">我們把每個想法<br>變成看得見的畫面</p>\n<p class=\"ly-duet\">32！</p>\n<p class=\"ly-duet\">逐光！</p>\n<p class=\"ly-duet\">畢聯會！</p>\n<p class=\"ly-duet\">不只是三個字<br>是我們一起完成的每一天</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>你們負責享受這一刻</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>我們負責把細節準備好</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>不用記得我們的名字</p>\n<p class=\"ly-duet\">只要記得<br>這一刻真的很好</p>\n</section>\n<section class=\"ly-sec\"><h3>Verse 2<small>女聲</small></h3>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>有人問<br>「你們到底在忙什麼？」</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>其實也沒什麼<br>就是想讓每件事更好一點</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>一個活動<br>一份服務<br>一個小小的驚喜</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>看起來只是幾分鐘</p>\n<p class=\"ly-m\">但背後可能<br>準備了好幾個星期</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>有時候累<br>有時候真的很想放棄</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>但看到大家玩得開心</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>就知道<br>這一切都值得繼續</p>\n</section>\n<section class=\"ly-sec\"><h3>Pre-Chorus<small>男女</small></h3>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>我們不需要掌聲</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>也不用站在最前面</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>只要事情順利</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>只要大家開心</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>那就是我們<br>最想看到的畫面</p>\n</section>\n<section class=\"ly-sec\"><h3>Chorus<small>男女</small></h3>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>32！</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>逐光！</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>畢聯會！</p>\n<p class=\"ly-duet\">我們把每個想法<br>變成看得見的畫面</p>\n<p class=\"ly-duet\">32！</p>\n<p class=\"ly-duet\">逐光！</p>\n<p class=\"ly-duet\">畢聯會！</p>\n<p class=\"ly-duet\">這一次<br>讓我們一起把故事寫得更精彩</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>你們往前走</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>我們負責在後面</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>把每一個需要<br>接住一點</p>\n</section>\n<section class=\"ly-sec\"><h3>Bridge<small>R&amp;B</small></h3>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>也許你不知道<br>誰準備了這一場</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>也許你不知道<br>誰改了多少遍方案</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>但沒關係</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>真的沒關係</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>因為我們知道<br>為什麼要做這一切</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>不是為了成為主角</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>而是讓每個主角<br>都有一個精彩的舞台</p>\n</section>\n<section class=\"ly-sec\"><h3>Final Chorus<small>男女＋全員</small></h3>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>32！</p>\n<p class=\"ly-duet\">逐光！</p>\n<p class=\"ly-duet\">畢聯會！</p>\n<p class=\"ly-duet\">把每一份期待<br>都變成最好的安排</p>\n<p class=\"ly-duet\">32！</p>\n<p class=\"ly-duet\">逐光！</p>\n<p class=\"ly-duet\">畢聯會！</p>\n<p class=\"ly-duet\">我們一起<br>把每個瞬間點亮起來</p>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>你們負責發光</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>我們負責逐光</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>一起把想做的事情<br>做到最好！</p>\n<p class=\"ly-all\"><span class=\"ly-v ly-all\">全員</span>32！</p>\n<p class=\"ly-all\">逐光！</p>\n<p class=\"ly-all\">畢聯會！</p>\n<p class=\"ly-all\">32！</p>\n<p class=\"ly-all\">逐光！</p>\n<p class=\"ly-all\">畢聯會！</p>\n</section>\n<section class=\"ly-sec\"><h3>Outro<small>男女</small></h3>\n<p class=\"ly-f\"><span class=\"ly-v ly-f\">女</span>我們不是主角。</p>\n<p class=\"ly-m\"><span class=\"ly-v ly-m\">男</span>但我們一直都在。</p>\n<p class=\"ly-duet\"><span class=\"ly-v ly-duet\">男女</span>為每一個需要的人<br>把路照亮。</p>\n<p class=\"ly-duet\">32。</p>\n<p class=\"ly-duet\">逐光畢聯會。</p>\n</section>\n  </div>\n  <div class=\"timing\" id=\"timing\" hidden>\n    <small id=\"tm-info\">幹部用：按「開始」後音樂從頭播放，每一段歌詞<b>開始唱的瞬間</b>按「下一句」（或空白鍵）。</small>\n    <div class=\"row\">\n      <button type=\"button\" id=\"tm-start\">開始</button>\n      <button type=\"button\" class=\"main\" id=\"tm-next\" disabled>下一句（空白鍵）</button>\n      <button type=\"button\" id=\"tm-undo\" disabled>上一步</button>\n    </div>\n    <textarea id=\"tm-out\" readonly hidden></textarea>\n  </div>\n</dialog>";
   while (wrap.firstChild) document.body.appendChild(wrap.firstChild);
-  document.body.classList.add("has-player");
+  
 })();
 
   // ▼ 播放器上顯示的歌名
@@ -83,14 +125,15 @@
       bc.onmessage = e => { if (e.data === "play" && !a.paused) { a.pause(); } };
     }
     if (AUTOPLAY && wasPlaying && store.get("bgm-off") !== "1" && !new URLSearchParams(location.search).has("timing")) {
+      let started = false;
       const kick = e => {
-        if (e && e.target && e.target.closest && e.target.closest("#mplay, #ly-play")) { done(); return; }  // 按的是播放鍵就交給按鈕處理
-        a.play().then(done).catch(() => {});
+        if (started) return;
+        if (e && e.target && e.target.closest && e.target.closest("#mplay, #ly-play")) { started = true; return; }  // 按的是播放鍵就交給按鈕處理
+        a.play().then(() => { started = true; }).catch(() => {});
       };
-      const evs = ["pointerdown", "keydown", "touchstart"];
-      const done = () => evs.forEach(ev => removeEventListener(ev, kick, true));
-      evs.forEach(ev => addEventListener(ev, kick, { capture: true, passive: true }));
-      a.play().then(done).catch(() => {});
+      window.__bgmKick = kick;   // 框裡的頁面被點擊時也會呼叫
+      ["pointerdown", "keydown", "touchstart"].forEach(ev => addEventListener(ev, kick, { capture: true, passive: true }));
+      a.play().then(() => { started = true; }).catch(() => {});
     }
     $("mmute").addEventListener("click", () => {
       if (a.volume === 0) { a.volume = 0.5; vol.value = 50; a.muted = false; }
@@ -182,3 +225,6 @@
     }
   })();
 
+
+  }
+})();
