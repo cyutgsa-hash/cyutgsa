@@ -184,6 +184,21 @@ dialog.lyrics::backdrop{background:rgba(34,28,23,.55)}
 .ly-v.ly-all{background:var(--ink);color:var(--ground)}
 p.ly-all,p.ly-duet{font-weight:700}
 
+/* lyrics sync */
+.ly-body.synced p[class^="ly-"]{opacity:.38;transition:opacity .35s,transform .35s;cursor:pointer;transform-origin:center}
+.ly-body.synced p.on{opacity:1;transform:scale(1.06);color:var(--ink)}
+.ly-body.synced p.done{opacity:.6}
+.ly-play{flex:none;width:44px;height:44px;border-radius:50%;border:none;background:var(--accent);color:#fff;cursor:pointer;display:grid;place-items:center}
+.ly-tools{display:flex;gap:8px}
+.timing{position:sticky;bottom:0;z-index:1;display:flex;flex-direction:column;gap:10px;padding:14px 24px 18px;background:var(--ground);border-top:1px solid var(--line)}
+.timing[hidden]{display:none}
+.timing .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.timing button{font:inherit;font-weight:700;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--ink);background:none;color:var(--ink);cursor:pointer}
+.timing button.main{background:var(--accent);border-color:var(--accent);color:#fff;flex:1}
+.timing textarea{width:100%;min-height:90px;font:12px/1.5 ui-monospace,monospace;border:1px solid var(--line);border-radius:8px;padding:8px}
+.timing small{color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.ly-body.synced p.on{transform:none}}
+
 /* responsive */
 @media (max-width:1180px){
   .menu-btn{display:block}
@@ -466,7 +481,22 @@ p.ly-all,p.ly-duet{font-weight:700}
     }
     a.addEventListener("play", sync); a.addEventListener("pause", sync); a.addEventListener("volumechange", sync);
 
-    $("mplay").addEventListener("click", () => { a.paused ? a.play().catch(() => {}) : a.pause(); });
+    $("mplay").addEventListener("click", () => {
+      if (a.paused) { a.play().catch(() => {}); store.set("bgm-off", ""); }
+      else { a.pause(); store.set("bgm-off", "1"); }   // 使用者自己按暫停，下次就不自動播放
+    });
+
+    // ▼ 自動播放：瀏覽器通常禁止有聲音的自動播放，被擋下時改成「使用者第一次點擊或按鍵時」開始
+    const AUTOPLAY = true;
+    if (AUTOPLAY && store.get("bgm-off") !== "1" && !new URLSearchParams(location.search).has("timing")) {
+      const kick = () => {
+        a.play().then(done).catch(() => {});
+      };
+      const evs = ["pointerdown", "keydown", "touchstart"];
+      const done = () => evs.forEach(ev => removeEventListener(ev, kick, true));
+      evs.forEach(ev => addEventListener(ev, kick, { capture: true, passive: true }));
+      a.play().then(done).catch(() => {});
+    }
     $("mmute").addEventListener("click", () => {
       if (a.volume === 0) { a.volume = 0.5; vol.value = 50; a.muted = false; }
       else a.muted = !a.muted;
@@ -481,7 +511,10 @@ p.ly-all,p.ly-duet{font-weight:700}
 <dialog class="lyrics" id="lyrics" aria-labelledby="ly-title">
   <div class="ly-head">
     <div><h2 id="ly-title">32屆逐光畢聯會</h2><p>畢聯會主題曲・歌詞</p></div>
-    <button class="ly-close" id="ly-close" type="button" aria-label="關閉歌詞">×</button>
+    <div class="ly-tools">
+      <button class="ly-play" id="ly-play" type="button" aria-label="播放音樂"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+      <button class="ly-close" id="ly-close" type="button" aria-label="關閉歌詞">×</button>
+    </div>
   </div>
   <div class="ly-body">
     <div class="ly-legend"><span class="ly-v ly-m">男</span><span class="ly-v ly-f">女</span><span class="ly-v ly-duet">男女</span><span class="ly-v ly-all">全員</span></div>
@@ -587,6 +620,15 @@ p.ly-all,p.ly-duet{font-weight:700}
 <p class="ly-duet">逐光畢聯會。</p>
 </section>
   </div>
+  <div class="timing" id="timing" hidden>
+    <small id="tm-info">幹部用：按「開始」後音樂從頭播放，每一段歌詞<b>開始唱的瞬間</b>按「下一句」（或空白鍵）。</small>
+    <div class="row">
+      <button type="button" id="tm-start">開始</button>
+      <button type="button" class="main" id="tm-next" disabled>下一句（空白鍵）</button>
+      <button type="button" id="tm-undo" disabled>上一步</button>
+    </div>
+    <textarea id="tm-out" readonly hidden></textarea>
+  </div>
 </dialog>
 <script>
   (function () {
@@ -594,6 +636,78 @@ p.ly-all,p.ly-duet{font-weight:700}
     document.getElementById("mlyr").addEventListener("click", () => d.showModal());
     document.getElementById("ly-close").addEventListener("click", () => d.close());
     d.addEventListener("click", e => { if (e.target === d) d.close(); });
+
+    // ▼ 歌詞時間軸：每一段歌詞開始的秒數（用 ?timing=1 打點工具產生）
+    const LYRIC_TIMES = [];
+
+    const a = document.getElementById("bgm");
+    const body = d.querySelector(".ly-body");
+    const lines = [...body.querySelectorAll('p[class^="ly-"]')];
+    const playBtn = document.getElementById("ly-play");
+    const icoPlay = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>';
+    const icoPause = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></svg>';
+    const syncBtn = () => { playBtn.innerHTML = a.paused ? icoPlay : icoPause; playBtn.setAttribute("aria-label", a.paused ? "播放音樂" : "暫停音樂"); };
+    playBtn.addEventListener("click", () => { a.paused ? a.play().catch(() => {}) : a.pause(); });
+    a.addEventListener("play", syncBtn); a.addEventListener("pause", syncBtn);
+
+    // 使用者自己捲動時，暫停自動捲動 4 秒
+    let userScrollUntil = 0;
+    ["wheel", "touchmove", "keydown"].forEach(ev => d.addEventListener(ev, () => { userScrollUntil = Date.now() + 4000; }, { passive: true }));
+
+    let times = LYRIC_TIMES.length === lines.length ? LYRIC_TIMES : null;
+    let cur = -1;
+    function highlight(force) {
+      if (!times) return;
+      const t = a.currentTime;
+      let i = -1;
+      for (let k = 0; k < times.length; k++) { if (times[k] <= t) i = k; else break; }
+      if (i === cur && !force) return;
+      cur = i;
+      lines.forEach((el, k) => { el.classList.toggle("on", k === i); el.classList.toggle("done", k < i); });
+      if (i >= 0 && d.open && Date.now() > userScrollUntil) lines[i].scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+    function enableSync() {
+      body.classList.add("synced");
+      lines.forEach((el, k) => el.addEventListener("click", () => { if (times) { a.currentTime = times[k] + 0.01; a.play().catch(() => {}); } }));
+      a.addEventListener("timeupdate", () => highlight(false));
+      a.addEventListener("seeked", () => highlight(true));
+      d.addEventListener("toggle", () => { if (d.open) { userScrollUntil = 0; highlight(true); } });
+    }
+    if (times) enableSync();
+
+    // ---- 打點工具（網址加上 ?timing=1 才會出現）----
+    if (new URLSearchParams(location.search).has("timing")) {
+      const tm = document.getElementById("timing"), out = document.getElementById("tm-out");
+      const bStart = document.getElementById("tm-start"), bNext = document.getElementById("tm-next"), bUndo = document.getElementById("tm-undo");
+      tm.hidden = false;
+      let marks = [];
+      const mark = () => {
+        lines.forEach((el, k) => { el.classList.toggle("on", k === marks.length); el.classList.toggle("done", k < marks.length); });
+        if (lines[marks.length]) lines[marks.length].scrollIntoView({ block: "center", behavior: "smooth" });
+        document.getElementById("tm-info").textContent = marks.length < lines.length
+          ? `第 ${marks.length + 1} / ${lines.length} 段：等這段開始唱的瞬間按「下一句」`
+          : "全部完成！把下面的數字整段複製，傳給網站管理者。";
+        if (marks.length >= lines.length) {
+          a.pause(); bNext.disabled = true;
+          out.hidden = false; out.value = JSON.stringify(marks);
+          times = marks.slice(); cur = -1;
+        }
+      };
+      bStart.addEventListener("click", () => {
+        marks = []; times = null; out.hidden = true; body.classList.add("synced");
+        a.currentTime = 0; a.play().catch(() => {});
+        bNext.disabled = false; bUndo.disabled = false; bStart.textContent = "重來"; mark();
+      });
+      bNext.addEventListener("click", () => { if (marks.length < lines.length) { marks.push(Math.round(a.currentTime * 10) / 10); mark(); } });
+      bUndo.addEventListener("click", () => {
+        if (!marks.length) return;
+        marks.pop(); a.currentTime = Math.max(0, (marks.length ? marks[marks.length - 1] : 0));
+        bNext.disabled = false; out.hidden = true; mark();
+      });
+      d.addEventListener("keydown", e => { if (e.code === "Space" && !bNext.disabled) { e.preventDefault(); bNext.click(); } });
+      if (!times) enableSync();
+      addEventListener("load", () => d.showModal());
+    }
   })();
 </script>
 </body>
