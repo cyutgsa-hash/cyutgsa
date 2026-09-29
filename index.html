@@ -39,7 +39,7 @@ header{position:sticky;top:0;z-index:10;background:rgba(245,239,228,.95);backdro
 .logo{width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:var(--serif);font-weight:900;font-size:20px;flex:none}
 .brand b{font-family:var(--serif);font-size:18px;display:block;line-height:1.3}
 .brand small{font-size:11px;letter-spacing:.1em;color:var(--muted)}
-nav ul{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:28px}
+nav ul{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:22px}
 nav a{text-decoration:none;color:var(--ink);font-weight:500}
 nav a:hover{color:var(--accent)}
 .ig{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff!important;padding:10px 20px;border-radius:999px;min-height:44px}
@@ -86,6 +86,7 @@ nav a:hover{color:var(--accent)}
 .steps .n{font-family:var(--serif);font-weight:900;font-size:40px;color:var(--accent);line-height:1.2}
 .steps h3{font-size:24px}
 .steps span{color:var(--text)}
+.steps .step-link{font-weight:700;margin-top:4px}
 .steps li.final{background:var(--ink);color:var(--ground);border-radius:0 0 16px 16px;padding-left:32px}
 .steps li.final .n{color:#E3A48F}
 .steps li.final span{color:#CDBFA9}
@@ -159,10 +160,32 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
 .eq i:nth-child(2){animation-delay:.2s!important}.eq i:nth-child(3){animation-delay:.4s!important}
 @keyframes eq{0%,100%{height:4px}50%{height:14px}}
 @media (prefers-reduced-motion:reduce){.player.playing .eq i{animation:none;height:10px}}
-@media (max-width:560px){.player .info span,.player .mute{display:none}.player input[type=range]{width:72px}}
+@media (max-width:560px){.player .info span,.player .mute,.player .eq{display:none}.player input[type=range]{width:64px}.player{gap:8px}}
+
+/* lyrics */
+.player .lyr-btn{width:auto;height:36px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.12);color:var(--ground);font:inherit;font-size:14px;font-weight:700}
+dialog.lyrics{width:min(560px,calc(100% - 24px));max-height:min(86vh,900px);padding:0;border:none;border-radius:20px;background:var(--paper);color:var(--ink);box-shadow:0 20px 60px rgba(34,28,23,.35)}
+dialog.lyrics::backdrop{background:rgba(34,28,23,.55)}
+.ly-head{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;background:var(--paper);border-bottom:1px solid var(--line)}
+.ly-head h2{font-family:var(--serif);font-weight:900;font-size:24px;line-height:1.3}
+.ly-head p{font-size:13px;color:var(--muted)}
+.ly-close{flex:none;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:none;font-size:22px;cursor:pointer;color:var(--ink)}
+.ly-body{padding:8px 24px 32px;text-align:center}
+.ly-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+.ly-sec{padding:24px 0;border-bottom:1px dashed var(--line)}
+.ly-sec:last-child{border-bottom:none}
+.ly-sec h3{font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;display:flex;justify-content:center;align-items:center;gap:8px}
+.ly-sec h3 small{letter-spacing:.05em;color:var(--muted);font-weight:500}
+.ly-sec p{margin:0 0 14px;font-size:17px;line-height:1.9}
+.ly-v{display:block;width:max-content;margin:0 auto 4px;font-size:11px;font-weight:700;padding:1px 10px;border-radius:999px;letter-spacing:.1em}
+.ly-v.ly-m{background:#E4ECF3;color:#28445C}
+.ly-v.ly-f{background:var(--no-bg,#F9E6E0);color:var(--accent)}
+.ly-v.ly-duet{background:#FFF3C4;color:#7A5A12}
+.ly-v.ly-all{background:var(--ink);color:var(--ground)}
+p.ly-all,p.ly-duet{font-weight:700}
 
 /* responsive */
-@media (max-width:1100px){
+@media (max-width:1180px){
   .menu-btn{display:block}
   nav{display:none;position:absolute;top:80px;left:0;right:0;background:var(--ground);border-bottom:1px solid var(--line);padding:16px var(--pad) 24px}
   nav.open{display:block}
@@ -209,6 +232,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
         <li><a href="#services">服務項目</a></li>
         <li><a href="#team">幹部介紹</a></li>
         <li><a href="#faq">常見問題</a></li>
+        <li><a href="booking.html">學士照預約</a></li>
         <li><a href="fee.html">會費查詢</a></li>
         <li><a class="ig" href="https://www.instagram.com/cyutgsa/" target="_blank" rel="noopener">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8"/></svg>
@@ -271,7 +295,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
     </div>
     <ol class="steps">
       <li><span class="n">01</span><h3>學士服發放</h3><span>[日期・時間・地點]</span></li>
-      <li><span class="n">02</span><h3>學士照拍攝</h3><span>[日期・時間・地點]</span></li>
+      <li><span class="n">02</span><h3>學士照拍攝</h3><span>[日期・時間・地點]</span><a class="step-link" href="booking.html">預約個人學士照時段 →</a></li>
       <li><span class="n">03</span><h3>畢業大團拍</h3><span>[日期・時間・地點]</span></li>
       <li><span class="n">04</span><h3>畢業紀念品預購</h3><span>[日期・預購方式]</span></li>
       <li><span class="n">05</span><h3>畢業歌發表</h3><span>[日期・平台]</span></li>
@@ -319,8 +343,8 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
     <div class="sec-head"><span class="kicker">TEAM</span><h2 class="h2">第 32 屆 幹部介紹</h2></div>
     <ul class="team team-lead" aria-label="會長團">
       <li class="member lead"><b>會長</b><strong>龔郁亭</strong></li>
-      <li class="member lead"><b>活動副會長</b><strong>石明煒</strong></li>
-      <li class="member lead"><b>行政副會長</b><strong>陳穎豐</strong></li>
+      <li class="member lead"><b>副會長</b><strong>石明煒</strong></li>
+      <li class="member lead"><b>副會長</b><strong>陳穎豐</strong></li>
       <li class="member lead"><b>執行秘書</b><strong>許祐華</strong></li>
     </ul>
     <ul class="team team-depts" aria-label="各部門">
@@ -402,6 +426,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
     <svg id="icon-vol" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
     <svg id="icon-muted" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>
   </button>
+  <button class="lyr-btn" id="mlyr" type="button" aria-haspopup="dialog">歌詞</button>
   <input id="mvol" type="range" min="0" max="100" value="50" aria-label="音量">
   <audio id="bgm" src="music/bgm.mp3" loop preload="metadata"></audio>
 </div>
@@ -450,6 +475,125 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
       a.volume = vol.value / 100; a.muted = false; store.set("bgm-vol", vol.value);
     });
     sync();
+  })();
+</script>
+
+<dialog class="lyrics" id="lyrics" aria-labelledby="ly-title">
+  <div class="ly-head">
+    <div><h2 id="ly-title">32屆逐光畢聯會</h2><p>畢聯會主題曲・歌詞</p></div>
+    <button class="ly-close" id="ly-close" type="button" aria-label="關閉歌詞">×</button>
+  </div>
+  <div class="ly-body">
+    <div class="ly-legend"><span class="ly-v ly-m">男</span><span class="ly-v ly-f">女</span><span class="ly-v ly-duet">男女</span><span class="ly-v ly-all">全員</span></div>
+<section class="ly-sec"><h3>Intro<small>男聲</small></h3>
+<p class="ly-m"><span class="ly-v ly-m">男</span>Hey！</p>
+<p class="ly-m">誰說站在台前<br>才叫做主角？</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>有些故事<br>總要有人在背後<br>把它變得更精彩。</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>32<br>逐光畢聯會！</p>
+</section>
+<section class="ly-sec"><h3>Verse 1<small>男聲</small></h3>
+<p class="ly-m"><span class="ly-v ly-m">男</span>一個想法<br>從一句「要不要試試看」</p>
+<p class="ly-m">變成一場活動<br>再變成大家期待的那一天</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>一通電話<br>一個訊息<br>一張張行程表</p>
+<p class="ly-f">有人找場地<br>有人想企劃<br>有人忙到手機都沒電啦</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>有人負責衝<br>有人負責想</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>有人在大家看不到的地方<br>把細節一項一項補上</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>我們不是為了站在聚光燈下<br>我們只是想把事情做好啊</p>
+</section>
+<section class="ly-sec"><h3>Pre-Chorus<small>女聲</small></h3>
+<p class="ly-f"><span class="ly-v ly-f">女</span>你說想要一場<br>值得記住的活動</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>那我們就想辦法<br>把它變成真的</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>你說還差一點</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>那我們再改一遍</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>因為你們的期待<br>就是我們前進的理由</p>
+</section>
+<section class="ly-sec"><h3>Chorus<small>男女</small></h3>
+<p class="ly-m"><span class="ly-v ly-m">男</span>32！</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>逐光！</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>畢聯會！</p>
+<p class="ly-duet">我們把每個想法<br>變成看得見的畫面</p>
+<p class="ly-duet">32！</p>
+<p class="ly-duet">逐光！</p>
+<p class="ly-duet">畢聯會！</p>
+<p class="ly-duet">不只是三個字<br>是我們一起完成的每一天</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>你們負責享受這一刻</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>我們負責把細節準備好</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>不用記得我們的名字</p>
+<p class="ly-duet">只要記得<br>這一刻真的很好</p>
+</section>
+<section class="ly-sec"><h3>Verse 2<small>女聲</small></h3>
+<p class="ly-f"><span class="ly-v ly-f">女</span>有人問<br>「你們到底在忙什麼？」</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>其實也沒什麼<br>就是想讓每件事更好一點</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>一個活動<br>一份服務<br>一個小小的驚喜</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>看起來只是幾分鐘</p>
+<p class="ly-m">但背後可能<br>準備了好幾個星期</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>有時候累<br>有時候真的很想放棄</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>但看到大家玩得開心</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>就知道<br>這一切都值得繼續</p>
+</section>
+<section class="ly-sec"><h3>Pre-Chorus<small>男女</small></h3>
+<p class="ly-f"><span class="ly-v ly-f">女</span>我們不需要掌聲</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>也不用站在最前面</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>只要事情順利</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>只要大家開心</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>那就是我們<br>最想看到的畫面</p>
+</section>
+<section class="ly-sec"><h3>Chorus<small>男女</small></h3>
+<p class="ly-m"><span class="ly-v ly-m">男</span>32！</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>逐光！</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>畢聯會！</p>
+<p class="ly-duet">我們把每個想法<br>變成看得見的畫面</p>
+<p class="ly-duet">32！</p>
+<p class="ly-duet">逐光！</p>
+<p class="ly-duet">畢聯會！</p>
+<p class="ly-duet">這一次<br>讓我們一起把故事寫得更精彩</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>你們往前走</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>我們負責在後面</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>把每一個需要<br>接住一點</p>
+</section>
+<section class="ly-sec"><h3>Bridge<small>R&amp;B</small></h3>
+<p class="ly-f"><span class="ly-v ly-f">女</span>也許你不知道<br>誰準備了這一場</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>也許你不知道<br>誰改了多少遍方案</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>但沒關係</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>真的沒關係</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>因為我們知道<br>為什麼要做這一切</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>不是為了成為主角</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>而是讓每個主角<br>都有一個精彩的舞台</p>
+</section>
+<section class="ly-sec"><h3>Final Chorus<small>男女＋全員</small></h3>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>32！</p>
+<p class="ly-duet">逐光！</p>
+<p class="ly-duet">畢聯會！</p>
+<p class="ly-duet">把每一份期待<br>都變成最好的安排</p>
+<p class="ly-duet">32！</p>
+<p class="ly-duet">逐光！</p>
+<p class="ly-duet">畢聯會！</p>
+<p class="ly-duet">我們一起<br>把每個瞬間點亮起來</p>
+<p class="ly-f"><span class="ly-v ly-f">女</span>你們負責發光</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>我們負責逐光</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>一起把想做的事情<br>做到最好！</p>
+<p class="ly-all"><span class="ly-v ly-all">全員</span>32！</p>
+<p class="ly-all">逐光！</p>
+<p class="ly-all">畢聯會！</p>
+<p class="ly-all">32！</p>
+<p class="ly-all">逐光！</p>
+<p class="ly-all">畢聯會！</p>
+</section>
+<section class="ly-sec"><h3>Outro<small>男女</small></h3>
+<p class="ly-f"><span class="ly-v ly-f">女</span>我們不是主角。</p>
+<p class="ly-m"><span class="ly-v ly-m">男</span>但我們一直都在。</p>
+<p class="ly-duet"><span class="ly-v ly-duet">男女</span>為每一個需要的人<br>把路照亮。</p>
+<p class="ly-duet">32。</p>
+<p class="ly-duet">逐光畢聯會。</p>
+</section>
+  </div>
+</dialog>
+<script>
+  (function () {
+    const d = document.getElementById("lyrics");
+    document.getElementById("mlyr").addEventListener("click", () => d.showModal());
+    document.getElementById("ly-close").addEventListener("click", () => d.close());
+    d.addEventListener("click", e => { if (e.target === d) d.close(); });
   })();
 </script>
 </body>

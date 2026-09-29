@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>32屆逐光 · 個人學士照預約</title>
+<meta name="description" content="個人畢業照時段報名系統，每時段限額 25 人，額滿即自動關閉。">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    box-sizing:border-box;
+    --bg:#FAF5F0; --bg-panel:#FFFFFF; --bg-subtle:#F2EAE0;
+    --gold:#AC9778; --gold-deep:#8B7355;
+    --ink-on-navy:#2B2622; --ink-muted:#8A7F72;
+    --success-bg:#E9F2EC; --error:#B14A38; --error-bg:#FBEAE6;
+    --divider:rgba(43,38,34,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink-on-navy);
+    font-family:'Noto Sans TC', system-ui, sans-serif; line-height:1.6;
+  }
+  a{color:inherit;}
+  .wrap{max-width:720px; margin:0 auto; padding:48px 20px 80px;}
+  header.hero{margin-bottom:36px;}
+  .hero-top{display:flex; align-items:flex-start; justify-content:space-between; gap:16px;}
+  .hero-text{flex:1; min-width:0;}
+  .brand-logo{flex-shrink:0; display:block; width:72px; height:72px; object-fit:contain; margin:0; border-radius:8px;}
+  .eyebrow{font-size:0.8rem; color:var(--gold); margin:0 0 10px; font-weight:500;}
+  h1{font-family:'Noto Serif TC', serif; font-weight:700; font-size:clamp(1.9rem,5vw,2.6rem); margin:0 0 14px; line-height:1.3;}
+  .lede{color:var(--ink-muted); font-size:1rem; max-width:56ch; margin:0 0 18px;}
+  .rules{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; padding:16px; background:var(--bg-panel); border-radius:12px; border:1px solid var(--divider);}
+  .rules div{font-size:0.86rem; color:var(--ink-muted);}
+  .rules strong{display:block; color:var(--ink-on-navy); font-size:1rem; margin-bottom:2px;}
+
+  #status-message{
+    position:fixed; top:calc(20px + env(safe-area-inset-top,0px)); left:50%;
+    transform:translateX(-50%) translateY(-8px); width:min(420px, calc(100% - 32px));
+    display:flex; align-items:flex-start; gap:10px; margin:0; padding:14px 16px; border-radius:12px;
+    font-size:0.92rem; box-shadow:0 14px 34px rgba(43,38,34,0.22); z-index:1000;
+    opacity:0; pointer-events:none; transition:opacity .12s ease, transform .12s ease;
+  }
+  #status-message.is-visible{opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto;}
+  #status-message .toast-text{flex:1; line-height:1.5;}
+  #status-message .toast-close{
+    flex-shrink:0; background:none; border:none; color:inherit; opacity:0.6; cursor:pointer;
+    font-size:1.1rem; line-height:1; padding:0 2px;
+  }
+  #status-message .toast-close:hover{opacity:1;}
+  #status-message.type-error{background:#FBEAE6; color:#8C3A2A; border:1px solid rgba(177,74,56,0.35);}
+  #status-message.type-success{background:#E9F2EC; color:#2F5C46; border:1px solid rgba(76,122,94,0.35);}
+  #status-message.type-info{background:#F3ECDF; color:#7A6435; border:1px solid rgba(172,151,120,0.45);}
+
+  section.card{background:var(--bg-panel); border:1px solid var(--divider); border-radius:14px; padding:20px; margin-bottom:28px;}
+  section.card h2{font-family:'Noto Serif TC', serif; font-size:1.15rem; margin:0 0 14px; font-weight:600;}
+  .field{margin-bottom:14px;}
+  .field:last-child{margin-bottom:0;}
+  .field label{display:block; font-size:0.84rem; color:var(--ink-muted); margin-bottom:6px;}
+  .field input, .field select{
+    width:100%; padding:11px 13px; border-radius:9px; border:1px solid var(--divider);
+    background:var(--bg-subtle); color:var(--ink-on-navy); font-size:1rem; font-family:inherit;
+  }
+  .field select{
+    appearance:none; -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23AC9778'%3E%3Cpath d='M5.5 7.5l4.5 4.5 4.5-4.5' stroke='%23AC9778' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 13px center; padding-right:36px;
+  }
+  .field select:disabled, .field input:disabled{opacity:0.5; cursor:not-allowed;}
+  .field select option{color:#2B2622; background:#ffffff;}
+  .field select option:disabled{color:#b3aca4;}
+  .admin-select{
+    width:100%; padding:11px 13px; border-radius:9px; border:1px solid var(--divider);
+    background:var(--bg-subtle); color:var(--ink-on-navy); font-size:0.94rem;
+    font-family:inherit; margin-bottom:12px;
+  }
+  .admin-select option{color:#2B2622; background:#ffffff;}
+  .field input::placeholder{color:rgba(43,38,34,0.35);}
+  .field input:focus, .field select:focus{outline:2px solid var(--gold); outline-offset:1px; border-color:var(--gold);}
+
+  h2.section-title{font-family:'Noto Serif TC', serif; font-size:1.2rem; margin:0 0 16px; font-weight:600;}
+  .slot-names-preview{font-size:0.84rem; color:var(--ink-muted); margin:-4px 0 16px; min-height:1.2em;}
+  .no-dates-message{padding:20px 18px; border-radius:12px; border:1px dashed var(--divider); background:var(--bg-panel); color:var(--ink-muted); font-size:0.94rem; line-height:1.6;}
+
+  .btn{font-family:inherit; font-size:0.96rem; font-weight:600; padding:11px 20px; border-radius:9px; border:none; cursor:pointer; transition:background .15s ease;}
+  .btn:disabled{opacity:0.5; cursor:not-allowed;}
+  .btn-primary{background:var(--gold); color:var(--ink-on-navy);}
+  .btn-primary:hover:not(:disabled){background:var(--gold-deep); color:var(--ink-on-navy);}
+  .btn-block{width:100%;}
+  .btn-danger{background:transparent; color:var(--error); border:1px solid var(--error); margin-bottom:16px;}
+  .btn-link-danger{background:none; color:var(--error); border:none; padding:4px 8px; font-size:0.84rem; text-decoration:underline; cursor:pointer;}
+
+  .admin-toggle-link{font-size:0.8rem; color:var(--ink-muted); text-decoration:underline; cursor:pointer; background:none; border:none; padding:0;}
+  .admin-panel-header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px;}
+  .admin-close-btn{
+    font-size:0.8rem; color:var(--ink-muted); background:none; border:1px solid var(--divider);
+    border-radius:8px; padding:6px 12px; cursor:pointer; white-space:nowrap;
+  }
+  .admin-close-btn:hover{color:var(--ink-on-navy); border-color:var(--ink-muted);}
+  #admin-login{margin-top:40px;}
+  #admin-panel{display:none; margin-top:20px;}
+  #admin-panel.is-visible{display:block;}
+  .admin-date-list{list-style:none; margin:0 0 20px; padding:0; display:flex; flex-direction:column; gap:8px;}
+  .admin-date-row{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:var(--bg-subtle); border:1px solid var(--divider); border-radius:10px;}
+  .admin-date-row .admin-date-row-label{font-weight:600;}
+  .admin-date-row .admin-date-row-meta{font-size:0.8rem; color:var(--ink-muted);}
+  .admin-stats{color:var(--ink-muted); font-size:0.92rem; margin:0 0 16px;}
+  table.admin-table{width:100%; border-collapse:collapse; font-size:0.86rem;}
+  table.admin-table th, table.admin-table td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--divider); white-space:nowrap;}
+  table.admin-table th{color:var(--ink-muted); font-weight:500;}
+  .admin-table-wrap{overflow-x:auto;}
+
+  footer{margin-top:48px; font-size:0.8rem; color:var(--ink-muted); text-align:center; line-height:1.8;}
+  .ig-link{color:var(--gold-deep); text-decoration:underline; font-weight:600;}
+
+  @media (max-width:480px){ .wrap{padding:32px 16px 56px;} .brand-logo{width:56px; height:56px;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="index.html" style="display:inline-flex;align-items:center;min-height:44px;font-weight:700;color:inherit;text-decoration:none;opacity:.75">← 回畢聯會首頁</a>
+  <header class="hero">
+    <div class="hero-top">
+      <div class="hero-text">
+        <p class="eyebrow">32屆逐光畢聯會</p>
+        <h1>個人學士照預約時段</h1>
+      </div>
+      <img class="brand-logo" src="data:image/jpeg;base64,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" alt="32屆畢聯 逐光 GSA" width="72" height="72">
+    </div>
+    <p class="lede" style="color: red; font-weight: bold;">每個時段限額 25 人，額滿即自動關閉；每人只能預約一次，送出後無法自行更改，請確認清楚再送出。</p>
+    <div class="rules">
+      <div><strong>09:00–12:00</strong>上午時段</div>
+      <div><strong>12:00–13:00</strong>休息，不開放</div>
+      <div><strong>13:00–18:00</strong>下午時段</div>
+      <div><strong>每時段 25 人</strong>額滿關閉</div>
+    </div>
+  </header>
+
+  <div id="status-message"></div>
+
+  <section class="card">
+    <h2>你的報名資料</h2>
+    <div class="field">
+      <label for="f-class">班級</label>
+      <input type="text" id="f-class" placeholder="例：資通3B" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="f-id">學號</label>
+      <input type="text" id="f-id" placeholder="例：11200000" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="f-name">姓名</label>
+      <input type="text" id="f-name" placeholder="例：王曉明" autocomplete="name">
+    </div>
+    <div class="field">
+      <label for="f-phone">聯絡電話</label>
+      <input type="tel" id="f-phone" placeholder="例：0912345678" autocomplete="tel">
+    </div>
+    <div class="field">
+      <label for="f-email">電子信箱</label>
+      <input type="email" id="f-email" placeholder="例：個人信箱（請勿使用學校信箱）" autocomplete="email">
+    </div>
+  </section>
+
+  <h2 class="section-title">選擇時段</h2>
+  <div id="no-dates-notice" class="no-dates-message" style="display:none"></div>
+  <section class="card" id="picker-section">
+    <div class="field">
+      <label for="f-date">日期</label>
+      <select id="f-date"></select>
+    </div>
+    <div class="field">
+      <label for="f-slot">時段</label>
+      <select id="f-slot"></select>
+    </div>
+    <div id="slot-names-preview" class="slot-names-preview"></div>
+    <button type="button" class="btn btn-primary btn-block" id="submit-btn">確認預約這個時段</button>
+  </section>
+
+  <button type="button" class="admin-toggle-link" id="admin-toggle-link">管理者登入</button>
+  <section class="card" id="admin-login" style="display:none">
+    <h2>管理者登入</h2>
+    <div class="field">
+      <label for="admin-key-input">管理密碼</label>
+      <input type="password" id="admin-key-input" placeholder="輸入管理密碼">
+    </div>
+    <button type="button" class="btn btn-primary" id="admin-login-btn">登入</button>
+  </section>
+
+  <div id="admin-panel"></div>
+
+  <footer>
+    有問題歡迎透過 Instagram 聯絡我們：
+    <a href="https://www.instagram.com/cyutgsa/" target="_blank" rel="noopener noreferrer" class="ig-link">@cyutgsa</a>
+  </footer>
+</div>
+
+<script>
+'use strict';
+
+// ⚠️ 部署 Apps Script 後，把下面換成你自己的「網頁應用程式」網址（結尾是 /exec）
+var API_URL = 'https://script.google.com/macros/s/AKfycbxvOUs_Eqw6fmdzNnBYfnyM64sATfOHFwJPcdy9LVaq_Tn7QxLVr7eXThIXQZwiOUrSFQ/exec';
+var BLOCKED_EMAIL_DOMAIN = '@gm.cyut.edu.tw';
+// Must match SLOT_CAPACITY in apps-script-code.gs. Only used to compute the
+// picker's remaining-seats display locally after an admin action, so we don't
+// need a second round-trip to the backend just to re-fetch the same number.
+var DEFAULT_SLOT_CAPACITY_FALLBACK = 25;
+
+var appState = { dates: [] };
+var selectedDateId = null;
+var selectedSlotId = null;
+var submitting = false;
+var adminKey = null;
+var adminData = null;
+
+function $(id){ return document.getElementById(id); }
+
+var toastTimer = null;
+function showMessage(type, text){
+  var el = $('status-message');
+  if (toastTimer){ clearTimeout(toastTimer); toastTimer = null; }
+  el.innerHTML = '';
+  el.className = 'is-visible type-' + type;
+
+  var textEl = document.createElement('span');
+  textEl.className = 'toast-text';
+  textEl.textContent = text;
+  el.appendChild(textEl);
+
+  var closeBtn = document.createElement('button');
+  closeBtn.type = 'button';
+  closeBtn.className = 'toast-close';
+  closeBtn.setAttribute('aria-label', '關閉提示');
+  closeBtn.textContent = '\u00d7';
+  closeBtn.addEventListener('click', clearMessage);
+  el.appendChild(closeBtn);
+
+  var autoHideMs = (type === 'error') ? 6000 : 4000;
+  toastTimer = setTimeout(clearMessage, autoHideMs);
+}
+function clearMessage(){
+  var el = $('status-message');
+  if (toastTimer){ clearTimeout(toastTimer); toastTimer = null; }
+  el.className = '';
+  el.innerHTML = '';
+}
+
+function findDateObj(dateId){
+  return appState.dates.find(function(d){ return d.id === dateId; }) || null;
+}
+function findSlotObj(dateObj, slotId){
+  if (!dateObj) return null;
+  return dateObj.slots.find(function(s){ return s.id === slotId; }) || null;
+}
+function fmtRange(slot){ return slot.start + ' - ' + slot.end; }
+
+async function apiGet(){
+  return apiPost({ action: 'get_state' });
+}
+async function apiPost(payload){
+  var res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  });
+  return res.json();
+}
+
+async function loadState(){
+  try {
+    var data = await apiGet();
+    if (!data || data.ok === false){
+      showMessage('error', '無法讀取報名資料，請稍後再試。');
+      return;
+    }
+    appState = data;
+    renderPicker();
+  } catch (e){
+    showMessage('error', '無法連線到報名系統，請確認網路連線，或稍後再試一次。');
+  }
+}
+
+function renderPicker(){
+  var notice = $('no-dates-notice');
+  var section = $('picker-section');
+  var dateSel = $('f-date');
+
+  if (!appState.dates || !appState.dates.length){
+    notice.style.display = 'block';
+    notice.textContent = '報名時段尚未開放，日期確定後會公佈在這裡，請留意後續通知。';
+    section.style.display = 'none';
+    return;
+  }
+  notice.style.display = 'none';
+  section.style.display = '';
+
+  var disabled = submitting;
+  dateSel.disabled = disabled;
+  dateSel.innerHTML = '';
+  var ph = document.createElement('option');
+  ph.value = ''; ph.textContent = '請選擇日期';
+  dateSel.appendChild(ph);
+  appState.dates.forEach(function(d){
+    var opt = document.createElement('option');
+    opt.value = d.id; opt.textContent = d.label;
+    dateSel.appendChild(opt);
+  });
+  if (selectedDateId && findDateObj(selectedDateId)){
+    dateSel.value = selectedDateId;
+  } else {
+    dateSel.value = '';
+    selectedDateId = null;
+    selectedSlotId = null;
+  }
+  renderSlotSelect();
+}
+
+function renderSlotSelect(){
+  var slotSel = $('f-slot');
+  slotSel.innerHTML = '';
+  var dateObj = selectedDateId ? findDateObj(selectedDateId) : null;
+  if (!dateObj){
+    var ph = document.createElement('option');
+    ph.value = ''; ph.textContent = '請先選擇日期';
+    slotSel.appendChild(ph);
+    slotSel.disabled = true;
+    selectedSlotId = null;
+    renderNamesPreview();
+    return;
+  }
+  slotSel.disabled = submitting;
+  var ph2 = document.createElement('option');
+  ph2.value = ''; ph2.textContent = '請選擇時段';
+  slotSel.appendChild(ph2);
+  dateObj.slots.forEach(function(slot){
+    var full = slot.remaining <= 0;
+    var opt = document.createElement('option');
+    opt.value = slot.id;
+    opt.textContent = fmtRange(slot) + (full ? '（已額滿）' : '（剩 ' + slot.remaining + ' 位）');
+    opt.disabled = full;
+    slotSel.appendChild(opt);
+  });
+  if (selectedSlotId && findSlotObj(dateObj, selectedSlotId)){
+    slotSel.value = selectedSlotId;
+  } else {
+    slotSel.value = '';
+    selectedSlotId = null;
+  }
+  renderNamesPreview();
+}
+
+function renderNamesPreview(){
+  var el = $('slot-names-preview');
+  el.textContent = '';
+  var dateObj = selectedDateId ? findDateObj(selectedDateId) : null;
+  var slot = dateObj && selectedSlotId ? findSlotObj(dateObj, selectedSlotId) : null;
+  if (!slot || !slot.names || !slot.names.length) return;
+  var shown = slot.names.slice(0, 4).join('、');
+  el.textContent = slot.names.length > 4
+    ? (shown + ' 等共 ' + slot.names.length + ' 人已報名這個時段')
+    : (shown + ' 已報名這個時段');
+}
+
+function renderSubmitButton(){
+  var btn = $('submit-btn');
+  btn.disabled = submitting;
+  btn.textContent = submitting ? '送出中…' : '確認預約這個時段';
+}
+
+async function handleSubmitClick(){
+  if (submitting) return;
+  clearMessage();
+  var className = $('f-class').value.trim();
+  var sid = $('f-id').value.trim();
+  var name = $('f-name').value.trim();
+  var phone = $('f-phone').value.trim();
+  var email = $('f-email').value.trim();
+  if (!className){ showMessage('error', '請輸入班級'); return; }
+  if (!sid){ showMessage('error', '請輸入學號'); return; }
+  if (!name){ showMessage('error', '請輸入姓名'); return; }
+  if (!phone){ showMessage('error', '請輸入聯絡電話'); return; }
+  if (!email){ showMessage('error', '請輸入電子郵箱'); return; }
+  if (email.toLowerCase().indexOf(BLOCKED_EMAIL_DOMAIN) !== -1){
+    showMessage('error', '請填寫個人信箱，不能使用學校信箱（' + BLOCKED_EMAIL_DOMAIN + '）報名。');
+    return;
+  }
+  if (!selectedDateId || !selectedSlotId){ showMessage('error', '請先選擇一個時段'); return; }
+
+  submitting = true;
+  renderSubmitButton();
+  try {
+    var res = await apiPost({
+      action: 'book', dateId: selectedDateId, slotId: selectedSlotId,
+      studentId: sid, name: name, className: className, phone: phone, email: email
+    });
+    submitting = false;
+    renderSubmitButton();
+    if (res && res.ok){
+      showMessage('success', res.message || '預約成功！');
+      appState = res;
+      selectedDateId = null;
+      selectedSlotId = null;
+      renderPicker();
+    } else {
+      showMessage('error', (res && res.message) || '送出失敗，請稍後再試一次。');
+      if (res && (res.dates)) { appState = res; renderPicker(); }
+    }
+  } catch (e){
+    submitting = false;
+    renderSubmitButton();
+    showMessage('error', '網路連線有問題，請稍後再試一次。');
+  }
+}
+
+// ---------- Admin ----------
+
+var STANDARD_SLOTS = [
+  { id: 's1', start: '09:00', end: '10:00' },
+  { id: 's2', start: '10:00', end: '11:00' },
+  { id: 's3', start: '11:00', end: '12:00' },
+  { id: 's4', start: '13:00', end: '14:00' },
+  { id: 's5', start: '14:00', end: '15:00' },
+  { id: 's6', start: '15:00', end: '16:00' },
+  { id: 's7', start: '16:00', end: '17:00' },
+  { id: 's8', start: '17:00', end: '18:00' }
+];
+function slotRangeById(slotId){
+  var s = STANDARD_SLOTS.find(function(x){ return x.id === slotId; });
+  return s ? (s.start + ' - ' + s.end) : slotId;
+}
+
+// Central place for every admin write: always shows either a success refresh
+// or a visible error, so a failure never just looks like "nothing happened".
+async function adminAction(payload){
+  showMessage('info', '處理中…');
+  try {
+    var res = await apiPost(payload);
+    if (res && res.ok){
+      adminData = res;
+      renderAdminPanel();
+      appState = buildAppStateFromAdminData(res);
+      renderPicker();
+      if (res.message) showMessage('info', res.message);
+      return true;
+    }
+    showMessage('error', (res && res.message) || '操作失敗，請稍後再試一次。');
+    return false;
+  } catch (e){
+    showMessage('error', '網路連線有問題，操作沒有送出，請確認網路狀況後再試一次。');
+    return false;
+  }
+}
+
+function showAdminError(text){
+  var el = $('admin-key-error');
+  if (el) el.remove();
+  var p = document.createElement('p');
+  p.id = 'admin-key-error';
+  p.style.color = '#F4C9BE';
+  p.style.fontSize = '0.86rem';
+  p.style.marginTop = '8px';
+  p.textContent = text;
+  $('admin-login').appendChild(p);
+}
+
+async function attemptAdminLogin(key){
+  try {
+    var res = await apiPost({ action: 'admin_list', adminKey: key });
+    if (res && res.ok){
+      adminKey = key;
+      adminData = res;
+      try { localStorage.setItem('gpb_admin_key', key); } catch (e) {}
+      $('admin-login').style.display = 'none';
+      $('admin-toggle-link').style.display = 'none';
+      renderAdminPanel();
+      return 'ok';
+    }
+    return 'unauthorized';
+  } catch (e){
+    return 'network_error';
+  }
+}
+
+function closeAdminPanel(){
+  var panel = $('admin-panel');
+  panel.classList.remove('is-visible');
+  panel.innerHTML = '';
+  var link = $('admin-toggle-link');
+  link.style.display = 'inline-block';
+  link.textContent = (adminKey && adminData) ? '管理面板' : '管理者登入';
+}
+
+function renderAdminPanel(){
+  var panel = $('admin-panel');
+  if (!adminKey || !adminData){ panel.classList.remove('is-visible'); panel.innerHTML = ''; return; }
+  panel.classList.add('is-visible');
+  panel.innerHTML = '';
+
+  var section = document.createElement('section');
+  section.className = 'card';
+
+  var headerRow = document.createElement('div');
+  headerRow.className = 'admin-panel-header';
+
+  var h2 = document.createElement('h2');
+  h2.textContent = '管理面板';
+  h2.style.margin = '0';
+  headerRow.appendChild(h2);
+
+  var closeBtn = document.createElement('button');
+  closeBtn.type = 'button';
+  closeBtn.className = 'admin-close-btn';
+  closeBtn.textContent = '關閉管理面板';
+  closeBtn.addEventListener('click', closeAdminPanel);
+  headerRow.appendChild(closeBtn);
+
+  section.appendChild(headerRow);
+
+  var addLabel = document.createElement('label');
+  addLabel.textContent = '新增個人畢業照日期（自動產生完整時段表）';
+  addLabel.style.display = 'block';
+  addLabel.style.fontSize = '0.84rem';
+  addLabel.style.color = 'var(--ink-muted)';
+  addLabel.style.marginBottom = '8px';
+  section.appendChild(addLabel);
+
+  var addRow = document.createElement('div');
+  addRow.style.display = 'flex';
+  addRow.style.gap = '8px';
+  addRow.style.marginBottom = '20px';
+  var addInput = document.createElement('input');
+  addInput.type = 'text';
+  addInput.placeholder = '例：6月15日（一）';
+  addInput.style.flex = '1';
+  addInput.style.padding = '11px 13px';
+  addInput.style.borderRadius = '9px';
+  addInput.style.border = '1px solid var(--divider)';
+  addInput.style.background = 'var(--bg-subtle)';
+  addInput.style.color = 'var(--ink-on-navy)';
+  var addBtn = document.createElement('button');
+  addBtn.type = 'button';
+  addBtn.className = 'btn btn-primary';
+  addBtn.textContent = '新增';
+  addBtn.addEventListener('click', async function(){
+    var label = addInput.value.trim();
+    if (!label) return;
+    var ok = await adminAction({ action: 'admin_add_date', adminKey: adminKey, label: label });
+    if (ok) addInput.value = '';
+  });
+  addRow.appendChild(addInput);
+  addRow.appendChild(addBtn);
+  section.appendChild(addRow);
+
+  if (adminData.dates && adminData.dates.length){
+    var listTitle = document.createElement('p');
+    listTitle.className = 'admin-stats';
+    listTitle.textContent = '目前開放的日期';
+    section.appendChild(listTitle);
+    var list = document.createElement('ul');
+    list.className = 'admin-date-list';
+    adminData.dates.forEach(function(d){
+      var count = adminData.bookings.filter(function(b){ return b.dateId === d.id; }).length;
+      var row = document.createElement('li');
+      row.className = 'admin-date-row';
+      var left = document.createElement('div');
+      var lbl = document.createElement('div'); lbl.className = 'admin-date-row-label'; lbl.textContent = d.label;
+      var meta = document.createElement('div'); meta.className = 'admin-date-row-meta'; meta.textContent = count + ' 筆預約';
+      left.appendChild(lbl); left.appendChild(meta);
+      var removeBtn = document.createElement('button');
+      removeBtn.type = 'button'; removeBtn.className = 'btn-link-danger'; removeBtn.textContent = '移除';
+      removeBtn.addEventListener('click', function(){
+        adminAction({ action: 'admin_remove_date', adminKey: adminKey, dateId: d.id });
+      });
+      row.appendChild(left);
+      row.appendChild(removeBtn);
+      list.appendChild(row);
+    });
+    section.appendChild(list);
+  }
+
+  var stats = document.createElement('p');
+  stats.className = 'admin-stats';
+  stats.textContent = '共 ' + adminData.bookings.length + ' 筆預約';
+  section.appendChild(stats);
+
+  var resetBtn = document.createElement('button');
+  resetBtn.type = 'button'; resetBtn.className = 'btn btn-danger'; resetBtn.textContent = '清空所有預約名單';
+  resetBtn.addEventListener('click', function(){
+    if (!window.confirm('確定要清空所有人的預約名單嗎？此動作無法復原。')) return;
+    adminAction({ action: 'admin_reset', adminKey: adminKey });
+  });
+  section.appendChild(resetBtn);
+
+  if (!adminData.bookings.length){
+    var noneMsg = document.createElement('p');
+    noneMsg.className = 'admin-stats';
+    noneMsg.textContent = '目前還沒有人報名。';
+    section.appendChild(noneMsg);
+  } else {
+    var pickLabel = document.createElement('label');
+    pickLabel.textContent = '選擇要管理的預約';
+    pickLabel.style.display = 'block';
+    pickLabel.style.fontSize = '0.84rem';
+    pickLabel.style.color = 'var(--ink-muted)';
+    pickLabel.style.marginBottom = '8px';
+    section.appendChild(pickLabel);
+
+    var bookingSelect = document.createElement('select');
+    bookingSelect.className = 'admin-select';
+
+    var sortedBookings = adminData.bookings.slice().sort(function(a, b){
+      return a.dateId.localeCompare(b.dateId) || a.slotId.localeCompare(b.slotId);
+    });
+    sortedBookings.forEach(function(b, idx){
+      var dateObj = adminData.dates.find(function(d){ return d.id === b.dateId; });
+      var opt = document.createElement('option');
+      opt.value = String(idx);
+      opt.textContent = (dateObj ? dateObj.label : b.dateId) + '　' + slotRangeById(b.slotId) + '　' + b.name + '（' + b.studentId + '）';
+      bookingSelect.appendChild(opt);
+    });
+    section.appendChild(bookingSelect);
+
+    var detailBox = document.createElement('div');
+    detailBox.style.fontSize = '0.86rem';
+    detailBox.style.color = 'var(--ink-muted)';
+    detailBox.style.marginBottom = '14px';
+    detailBox.style.lineHeight = '1.7';
+    section.appendChild(detailBox);
+
+    function renderBookingDetail(){
+      var b = sortedBookings[Number(bookingSelect.value)];
+      detailBox.innerHTML = '';
+      if (!b) return;
+      [
+        '班級：' + b.className,
+        '聯絡電話：' + b.phone,
+        '電子郵箱：' + (b.email || '（未填寫）')
+      ].forEach(function(t){
+        var p = document.createElement('div');
+        p.textContent = t;
+        detailBox.appendChild(p);
+      });
+    }
+    bookingSelect.addEventListener('change', renderBookingDetail);
+    renderBookingDetail();
+
+    var deleteBookingBtn = document.createElement('button');
+    deleteBookingBtn.type = 'button';
+    deleteBookingBtn.className = 'btn btn-danger';
+    deleteBookingBtn.textContent = '刪除這筆預約';
+    deleteBookingBtn.addEventListener('click', function(){
+      var b = sortedBookings[Number(bookingSelect.value)];
+      if (!b) return;
+      if (!window.confirm('確定要刪除「' + b.name + '」（學號 ' + b.studentId + '）的這筆預約嗎？')) return;
+      adminAction({ action: 'admin_cancel', adminKey: adminKey, dateId: b.dateId, slotId: b.slotId, studentId: b.studentId });
+    });
+    section.appendChild(deleteBookingBtn);
+  }
+
+  panel.appendChild(section);
+}
+
+function buildAppStateFromAdminData(data){
+  var dates = data.dates.map(function(d){
+    var slots = STANDARD_SLOTS.map(function(t){
+      var inSlot = data.bookings.filter(function(b){ return b.dateId === d.id && b.slotId === t.id; });
+      return {
+        id: t.id, start: t.start, end: t.end, capacity: DEFAULT_SLOT_CAPACITY_FALLBACK,
+        remaining: Math.max(0, DEFAULT_SLOT_CAPACITY_FALLBACK - inSlot.length),
+        names: inSlot.map(function(b){ return b.name; })
+      };
+    });
+    return { id: d.id, label: d.label, slots: slots };
+  });
+  return { ok: true, dates: dates };
+}
+
+function init(){
+  $('submit-btn').addEventListener('click', handleSubmitClick);
+  $('f-date').addEventListener('change', function(){
+    selectedDateId = $('f-date').value || null;
+    selectedSlotId = null;
+    renderSlotSelect();
+  });
+  $('f-slot').addEventListener('change', function(){
+    selectedSlotId = $('f-slot').value || null;
+    renderNamesPreview();
+  });
+
+  $('admin-toggle-link').addEventListener('click', function(){
+    if (adminKey && adminData){
+      $('admin-toggle-link').style.display = 'none';
+      renderAdminPanel();
+    } else {
+      $('admin-login').style.display = $('admin-login').style.display === 'none' ? 'block' : 'none';
+    }
+  });
+  $('admin-login-btn').addEventListener('click', async function(){
+    var key = $('admin-key-input').value;
+    showMessage('info', '登入中…');
+    var result = await attemptAdminLogin(key);
+    if (result === 'ok'){ clearMessage(); }
+    else if (result === 'unauthorized'){ clearMessage(); showAdminError('管理密碼錯誤，請再試一次。'); }
+    else if (result === 'network_error'){ clearMessage(); showAdminError('無法連線到系統，請確認網路連線後再試一次。'); }
+  });
+
+  if (API_URL === 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE'){
+    showMessage('error', '尚未設定 API_URL：請部署 Apps Script 後，把網頁應用程式網址填進 index.html 最上面的 API_URL。');
+  } else {
+    loadState();
+  }
+
+  try {
+    var savedKey = localStorage.getItem('gpb_admin_key');
+    if (savedKey) attemptAdminLogin(savedKey);
+  } catch (e) {}
+}
+
+if (document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
