@@ -104,6 +104,35 @@ nav a:hover{color:var(--accent)}
 .cal-note{margin-top:20px;font-size:14px;color:var(--muted)}
 @media (max-width:560px){.cal li{grid-template-columns:1fr;gap:2px}}
 
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink);max-width:960px}
+.tl-month{font-family:var(--serif);font-weight:900;font-size:20px;color:var(--accent);padding:28px 0 8px}
+.tl-item,.tl-more{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}
+.tl-date b{display:block;font-family:var(--serif);font-weight:900;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}
+.tl-date small{color:var(--muted);font-size:14px}
+.tl-body{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px}
+.tl-body h3{font-size:22px}
+.tl-body p{color:var(--text);flex-basis:100%}
+.tl-tag{font-size:13px;font-weight:700;padding:2px 12px;border-radius:999px}
+.tl-tag:empty{display:none}
+.tl-item.next .tl-tag{background:var(--accent);color:#fff}
+.tl-item.now .tl-tag{background:#2F6B45;color:#fff}
+.tl-item.past{opacity:.45}
+.tl-item.past .tl-tag{background:var(--line);color:var(--text)}
+.tl-more{border-bottom:1px dashed var(--line)}
+.tl-more .tl-date b{color:var(--muted);font-size:22px}
+.tl-more h3{color:var(--muted)}
+.tl-final{margin-top:24px;background:var(--ink);color:var(--ground);border-radius:16px;padding:28px 32px;border-bottom:none}
+.tl-final .tl-date small,.tl-final .tl-body p{color:#CDBFA9}
+.tl-final .tl-date b{color:#E3A48F}
+.tl-note{margin-top:24px;font-weight:700}
+@media (max-width:640px){
+  .tl-item,.tl-more{grid-template-columns:1fr;gap:4px}
+  .tl-date b{display:inline;font-size:24px}
+  .tl-date small{margin-left:6px}
+  .tl-final{padding:24px}
+}
+
 /* services */
 .services{background:var(--accent);color:#fff}
 .services .kicker{color:var(--accent-soft)}
@@ -189,7 +218,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
     <nav id="site-nav" aria-label="主選單">
       <ul>
         <li><a href="#news">最新公告</a></li>
-        <li><a href="#schedule">畢業季行程</a></li>
+        <li><a href="#schedule">活動預定表</a></li>
         <li><a href="#services">服務項目</a></li>
         <li><a href="#team">幹部介紹</a></li>
         <li><a href="#faq">常見問題</a></li>
@@ -210,7 +239,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
       <h1>把最後一年，<br>好好收進回憶裡。</h1>
       <p>我們是朝陽科技大學畢業班學生聯誼會。從學士服、畢業照、大團拍到畢業典禮，陪每一位畢業生走完在朝陽的最後一段路。</p>
       <div class="btns">
-        <a class="btn solid" href="#schedule">查看畢業季行程</a>
+        <a class="btn solid" href="#schedule">查看活動預定表</a>
         <a class="btn ghost" href="#news">最新公告</a>
       </div>
     </div>
@@ -251,17 +280,27 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
   <section id="schedule">
     <div class="sec-head">
       <span class="kicker">SCHEDULE</span>
-      <h2 class="h2">畢業季行程</h2>
+      <h2 class="h2">重要活動預定表</h2>
       <p style="color:var(--text)">日期以畢聯會最新公告為準，請先把時間留下來。</p>
     </div>
-    <ol class="steps">
-      <li><span class="n">01</span><h3>學士服發放</h3><span>[日期・時間・地點]</span></li>
-      <li><span class="n">02</span><h3>學士照拍攝</h3><span>[日期・時間・地點]</span><a class="step-link" href="booking.html">預約個人學士照時段 →</a></li>
-      <li><span class="n">03</span><h3>畢業大團拍</h3><span>[日期・時間・地點]</span></li>
-      <li><span class="n">04</span><h3>畢業紀念品預購</h3><span>[日期・預購方式]</span></li>
-      <li><span class="n">05</span><h3>畢業歌發表</h3><span>[日期・平台]</span></li>
-      <li class="final"><span class="n">06</span><h3>畢業典禮</h3><span>2027.6.4（五）– 6.7（一）<br>[各學院場次・時間・地點]</span></li>
-        </ol>
+    <ol class="tl" id="timeline">
+      <li class="tl-month" aria-hidden="true">10 月</li>
+      <li class="tl-item" data-start="2026-10-12" data-end="2026-10-13"><div class="tl-date"><b>10/12–13</b><small>（一）–（二）</small></div><div class="tl-body"><h3>捐血活動</h3><span class="tl-tag"></span></div></li>
+      <li class="tl-item" data-start="2026-10-21" data-end="2026-10-21"><div class="tl-date"><b>10/21</b><small>（三）</small></div><div class="tl-body"><h3>萬聖節活動</h3><span class="tl-tag"></span></div></li>
+      <li class="tl-month" aria-hidden="true">11 月</li>
+      <li class="tl-item" data-start="2026-11-03" data-end="2026-11-03"><div class="tl-date"><b>11/3</b><small>（二）</small></div><div class="tl-body"><h3>第二次畢代大會</h3><span class="tl-tag"></span></div></li>
+      <li class="tl-item" data-start="2026-11-07" data-end="2026-11-08"><div class="tl-date"><b>11/7–8</b><small>（六）–（日）</small></div><div class="tl-body"><h3>學士服發放</h3><span class="tl-tag"></span></div></li>
+      <li class="tl-item" data-start="2026-11-09" data-end="2026-11-13"><div class="tl-date"><b>11/9–13</b><small>（一）–（五）</small></div><div class="tl-body"><h3>學士服補發</h3><span class="tl-tag"></span></div></li>
+      <li class="tl-item" data-start="2026-11-16" data-end="2026-11-20"><div class="tl-date"><b>11/16–20</b><small>（一）–（五）</small></div><div class="tl-body"><h3>畢業團拍</h3><span class="tl-tag"></span></div></li>
+      <li class="tl-item" data-start="2026-11-30" data-end="2026-12-11"><div class="tl-date"><b>11/30–12/11</b><small>（一）–（五）・兩週</small></div><div class="tl-body"><h3>畢業佈置</h3><span class="tl-tag"></span></div></li>
+      <li class="tl-month" aria-hidden="true">12 月</li>
+      <li class="tl-item" data-start="2026-12-08" data-end="2026-12-08"><div class="tl-date"><b>12/8</b><small>（二）</small></div><div class="tl-body"><h3>職涯講座</h3><span class="tl-tag"></span></div></li>
+      <li class="tl-item" data-start="2026-12-21" data-end="2026-12-23"><div class="tl-date"><b>12/21–23</b><small>（一）–（三）</small></div><div class="tl-body"><h3>捐血</h3><span class="tl-tag"></span></div></li>
+      <li class="tl-item" data-start="2026-12-24" data-end="2026-12-24"><div class="tl-date"><b>12/24</b><small>（四）</small></div><div class="tl-body"><h3>聖誕節市集</h3><span class="tl-tag"></span></div></li>
+      <li class="tl-more"><div class="tl-date"><b>1 月起</b></div><div class="tl-body"><h3>後續活動規劃中</h3><p>新的活動確定後會公告在 <a href="https://www.instagram.com/cyutgsa/" target="_blank" rel="noopener">IG @cyutgsa</a>，也會更新在這裡。</p></div></li>
+      <li class="tl-item tl-final" data-start="2027-06-04" data-end="2027-06-07"><div class="tl-date"><b>2027<br>6/4–7</b><small>（五）–（一）</small></div><div class="tl-body"><h3>畢業典禮</h3><p>[各學院場次・時間・地點]</p><span class="tl-tag"></span></div></li>
+    </ol>
+    <p class="tl-note"><a href="booking.html">個人學士照時段開放預約中，點這裡預約 →</a></p>
     <div class="cal">
       <div class="cal-head">
         <h3>學校行事曆：畢業生要注意的日期</h3>
@@ -329,7 +368,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
     </div>
     <div class="qa">
       <details open><summary>學士服要去哪裡領？需要帶什麼？</summary><p>[領取地點與時間]。請攜帶學生證，押金與歸還期限請見 IG 公告。</p></details>
-      <details><summary>畢業照和大團拍的時間怎麼查？</summary><p>所有拍攝日期都會在 IG @cyutgsa 公告，也會同步更新在本頁的「畢業季行程」。</p></details>
+      <details><summary>畢業照和大團拍的時間怎麼查？</summary><p>所有拍攝日期都會在 IG @cyutgsa 公告，也會同步更新在本頁的「活動預定表」。</p></details>
       <details><summary>錯過了自己班級的拍攝時段怎麼辦？</summary><p>[補拍規則]。請盡快私訊畢聯會 IG，我們會協助安排。</p></details>
       <details><summary>畢業紀念品怎麼預購、怎麼付款？</summary><p>[預購表單連結與付款方式]。</p></details>
       <details><summary>想參與畢業歌或畢業影片的製作？</summary><p>歡迎！留意招募公告，或直接私訊 IG 告訴我們你想幫忙的部分。</p></details>
@@ -358,6 +397,20 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
     const days = Math.max(0, Math.ceil((d - new Date()) / 86400000));
     document.getElementById("days").textContent = days;
   }
+
+  // 活動預定表：自動標示「進行中」「下一場」「已結束」
+  (function () {
+    const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" }));
+    today.setHours(0, 0, 0, 0);
+    const day = s => new Date(s + "T00:00:00");
+    let nextMarked = false;
+    document.querySelectorAll("#timeline .tl-item").forEach(li => {
+      const st = day(li.dataset.start), en = day(li.dataset.end), tag = li.querySelector(".tl-tag");
+      if (en < today) { li.classList.add("past"); tag.textContent = "已結束"; }
+      else if (st <= today) { li.classList.add("now"); tag.textContent = "進行中"; nextMarked = true; }
+      else if (!nextMarked) { li.classList.add("next"); tag.textContent = "下一場"; nextMarked = true; }
+    });
+  })();
 
   // 手機版選單
   const btn = document.querySelector(".menu-btn");
