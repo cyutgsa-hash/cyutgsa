@@ -137,6 +137,7 @@ nav a:hover{color:var(--accent)}
 .services{background:var(--accent);color:#fff}
 .services .kicker{color:var(--accent-soft)}
 .grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.grid4.grid3svc{grid-template-columns:repeat(3,minmax(0,1fr))}
 .svc{background:rgba(0,0,0,.18);border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:18px}
 .svc h3{font-size:22px}
 .svc p{color:#FBEAE4}
@@ -181,7 +182,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
   nav.open{display:block}
   nav ul{flex-direction:column;align-items:flex-start;gap:4px}
   nav li a{display:flex;align-items:center;min-height:48px}
-  .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid4,.grid4.grid3svc{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:900px){
   .team-lead,.team-depts{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -200,7 +201,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
 }
 @media (max-width:560px){
   .brand small{display:none}
-  .grid4{grid-template-columns:1fr}
+  .grid4,.grid4.grid3svc{grid-template-columns:1fr}
   .count{width:200px;height:170px;padding:22px}
   .count strong{font-size:52px}
 }
@@ -319,7 +320,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
 
   <section id="services" class="services">
     <div class="sec-head"><span class="kicker">SERVICES</span><h2 class="h2">畢聯會為你做的事</h2></div>
-    <div class="grid4">
+    <div class="grid4 grid3svc">
       <div class="svc">
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></svg>
         <h3>學士服租借</h3><p>統一發放、統一歸還，領取流程與押金規定都在公告裡。</p>
@@ -331,10 +332,6 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
       <div class="svc">
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18"/><path d="M12 8c-2-4-6-4-6-1.5S9 8 12 8c3 0 6-.5 6-1.5S14 4 12 8z"/></svg>
         <h3>畢業紀念品</h3><p>[紀念品品項，例如紀念冊、帽T、小物]</p>
-      </div>
-      <div class="svc">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-        <h3>畢業歌・畢業影片</h3><p>每一屆專屬的歌與影像，替這幾年寫下結尾。</p>
       </div>
     </div>
   </section>
@@ -371,7 +368,6 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
       <details><summary>畢業照和大團拍的時間怎麼查？</summary><p>所有拍攝日期都會在 IG @cyutgsa 公告，也會同步更新在本頁的「重要活動預定表」。</p></details>
       <details><summary>錯過了自己班級的拍攝時段怎麼辦？</summary><p>[補拍規則]。請盡快私訊畢聯會 IG，我們會協助安排。</p></details>
       <details><summary>畢業紀念品怎麼預購、怎麼付款？</summary><p>[預購表單連結與付款方式]。</p></details>
-      <details><summary>想參與畢業歌或畢業影片的製作？</summary><p>歡迎！留意招募公告，或直接私訊 IG 告訴我們你想幫忙的部分。</p></details>
     </div>
   </section>
 </main>
@@ -382,7 +378,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
       <h2>有問題，<br>隨時來找我們。</h2>
       <a href="https://www.instagram.com/cyutgsa/" target="_blank" rel="noopener">Instagram　@cyutgsa</a>
     </div>
-    <dl><dt>會辦位置</dt><dd>第一宿舍大樓 10F（R-1011）</dd><dt>值班時間</dt><dd>每週二至週四 13:30–20:00</dd></dl>
+    <dl><dt>會辦位置</dt><dd>第一宿舍大樓 10F（R-1011）</dd><dt>值班時間</dt><dd>每週二至週四 13:30–20:00</dd><dt>聯絡電話</dt><dd><a class="mail" href="tel:+886423323000,1269">(04) 2332-3000</a><br>分機 1269、1270</dd></dl>
     <dl><dt>聯絡信箱</dt><dd><a class="mail" href="mailto:cyutgsa@gmail.com">cyutgsa@gmail.com</a></dd><dt>學校地址</dt><dd>台中市霧峰區吉峰東路 168 號</dd></dl>
   </div>
   <div class="copy"><span>© 朝陽科技大學畢業班學生聯誼會</span><span>Chaoyang University of Technology</span></div>
