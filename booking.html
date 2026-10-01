@@ -55,6 +55,17 @@
   #status-message.type-success{background:#E9F2EC; color:#2F5C46; border:1px solid rgba(76,122,94,0.35);}
   #status-message.type-info{background:#F3ECDF; color:#7A6435; border:1px solid rgba(172,151,120,0.45);}
 
+  .reg-window{margin:0 0 28px; padding:18px 20px; border-radius:14px; border:1px solid var(--divider); background:var(--bg-panel); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px 20px;}
+  .reg-window[hidden]{display:none;}
+  .reg-window .reg-time{font-size:0.9rem; color:var(--ink-muted);}
+  .reg-window .reg-time b{display:block; color:var(--ink-on-navy); font-size:1rem;}
+  .reg-window .reg-state{font-weight:700; font-size:0.95rem; padding:6px 14px; border-radius:999px; white-space:nowrap;}
+  .reg-window.is-before .reg-state{background:var(--bg-subtle); color:var(--gold-deep);}
+  .reg-window.is-open .reg-state{background:var(--success-bg); color:#2F6B45;}
+  .reg-window.is-after .reg-state{background:var(--error-bg); color:var(--error);}
+  .reg-window .reg-count{flex-basis:100%; margin:0; font-size:0.9rem; color:var(--ink-muted); font-variant-numeric:tabular-nums;}
+  .reg-window .reg-count:empty{display:none;}
+  .reg-locked input, .reg-locked select{opacity:.55;}
   section.card{background:var(--bg-panel); border:1px solid var(--divider); border-radius:14px; padding:20px; margin-bottom:28px;}
   section.card h2{font-family:'Noto Serif TC', serif; font-size:1.15rem; margin:0 0 14px; font-weight:600;}
   .field{margin-bottom:14px;}
@@ -141,6 +152,12 @@
 
   <div id="status-message"></div>
 
+  <div class="reg-window" id="reg-window" role="status" aria-live="polite" hidden>
+    <div class="reg-time"><b>開放登記時間</b><span id="reg-range"></span></div>
+    <span class="reg-state" id="reg-state"></span>
+    <p class="reg-count" id="reg-count"></p>
+  </div>
+
   <section class="card">
     <h2>你的報名資料</h2>
     <div class="field">
@@ -209,6 +226,11 @@ var BLOCKED_EMAIL_DOMAIN = '@gm.cyut.edu.tw';
 // need a second round-trip to the backend just to re-fetch the same number.
 var DEFAULT_SLOT_CAPACITY_FALLBACK = 25;
 
+// ▼ 開放登記時間（台灣時間，格式 'YYYY-MM-DD HH:mm'）
+//   開始前不能登記、截止後不能再登記；兩個都留空 = 不限制時間
+var REG_OPEN  = '';   // 例：'2026-10-20 12:00'
+var REG_CLOSE = '';   // 例：'2026-10-25 23:59'
+
 var appState = { dates: [] };
 var selectedDateId = null;
 var selectedSlotId = null;
@@ -217,6 +239,58 @@ var adminKey = null;
 var adminData = null;
 
 function $(id){ return document.getElementById(id); }
+
+// ---------- 開放登記時間 ----------
+function parseTW(s){ return s ? new Date(s.replace(' ', 'T') + ':00+08:00') : null; }
+var regOpenAt = parseTW(REG_OPEN), regCloseAt = parseTW(REG_CLOSE);
+var serverOffset = 0;   // 用伺服器時間校正，避免手機時間不準
+function nowMs(){ return Date.now() + serverOffset; }
+function regStatus(){
+  var t = nowMs();
+  if (regOpenAt && t < regOpenAt.getTime()) return 'before';
+  if (regCloseAt && t > regCloseAt.getTime()) return 'after';
+  return 'open';
+}
+function fmtTW(d){
+  var w = '日一二三四五六';
+  var tw = new Date(d.getTime() + 8 * 3600e3);
+  var hh = String(tw.getUTCHours()).padStart(2, '0'), mm = String(tw.getUTCMinutes()).padStart(2, '0');
+  return (tw.getUTCMonth() + 1) + '/' + tw.getUTCDate() + '（' + w[tw.getUTCDay()] + '）' + hh + ':' + mm;
+}
+function fmtLeft(ms){
+  var s = Math.max(0, Math.floor(ms / 1000));
+  var d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
+  return (d ? d + ' 天 ' : '') + (d || h ? h + ' 小時 ' : '') + m + ' 分 ' + sec + ' 秒';
+}
+var lastRegStatus = null;
+function renderRegWindow(){
+  var box = $('reg-window');
+  if (!regOpenAt && !regCloseAt){ box.hidden = true; return; }
+  box.hidden = false;
+  $('reg-range').textContent = (regOpenAt ? fmtTW(regOpenAt) : '即日起') + ' – ' + (regCloseAt ? fmtTW(regCloseAt) : '額滿為止');
+  var st = regStatus();
+  box.className = 'reg-window is-' + st;
+  if (st === 'before'){
+    $('reg-state').textContent = '尚未開放';
+    $('reg-count').textContent = '距離開放還有 ' + fmtLeft(regOpenAt.getTime() - nowMs());
+  } else if (st === 'open'){
+    $('reg-state').textContent = '開放登記中';
+    $('reg-count').textContent = regCloseAt ? '距離截止還有 ' + fmtLeft(regCloseAt.getTime() - nowMs()) : '';
+  } else {
+    $('reg-state').textContent = '登記已截止';
+    $('reg-count').textContent = '如有特殊狀況，請私訊畢聯會 IG @cyutgsa。';
+  }
+  if (st !== lastRegStatus){
+    lastRegStatus = st;
+    lockForm(st !== 'open');
+    if (lastRegStatus !== null && typeof renderPicker === 'function' && appState.dates) renderPicker();
+  }
+}
+function lockForm(locked){
+  ['f-class','f-id','f-name','f-phone','f-email'].forEach(function(id){ var el = $(id); if (el) el.disabled = locked; });
+  document.querySelectorAll('#f-class, #f-date').forEach(function(el){ var c = el.closest('section.card'); if (c) c.classList.toggle('reg-locked', locked); });
+  renderSubmitButton();
+}
 
 var toastTimer = null;
 function showMessage(type, text){
@@ -297,7 +371,7 @@ function renderPicker(){
   notice.style.display = 'none';
   section.style.display = '';
 
-  var disabled = submitting;
+  var disabled = submitting || regStatus() !== 'open';
   dateSel.disabled = disabled;
   dateSel.innerHTML = '';
   var ph = document.createElement('option');
@@ -366,13 +440,17 @@ function renderNamesPreview(){
 
 function renderSubmitButton(){
   var btn = $('submit-btn');
-  btn.disabled = submitting;
-  btn.textContent = submitting ? '送出中…' : '確認預約這個時段';
+  var st = regStatus();
+  btn.disabled = submitting || st !== 'open';
+  btn.textContent = submitting ? '送出中…' : (st === 'before' ? '尚未開放登記' : st === 'after' ? '登記已截止' : '確認預約這個時段');
 }
 
 async function handleSubmitClick(){
   if (submitting) return;
   clearMessage();
+  var rs = regStatus();
+  if (rs === 'before'){ showMessage('error', '尚未開放登記，' + fmtTW(regOpenAt) + ' 開放。'); return; }
+  if (rs === 'after'){ showMessage('error', '登記已截止，無法再登記。'); return; }
   var className = $('f-class').value.trim();
   var sid = $('f-id').value.trim();
   var name = $('f-name').value.trim();
@@ -712,6 +790,14 @@ function init(){
   } else {
     loadState();
   }
+
+  // 開放登記時間：每秒更新倒數，時間一到自動開放／關閉
+  renderRegWindow();
+  setInterval(renderRegWindow, 1000);
+  fetch(location.href.split('#')[0], { method: 'HEAD', cache: 'no-store' }).then(function(r){
+    var d = r.headers.get('Date');
+    if (d){ serverOffset = new Date(d).getTime() - Date.now(); renderRegWindow(); }
+  }).catch(function(){});
 
   try {
     var savedKey = localStorage.getItem('gpb_admin_key');
