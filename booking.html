@@ -113,6 +113,13 @@
   .admin-close-btn:hover{color:var(--ink-on-navy); border-color:var(--ink-muted);}
   #admin-login{margin-top:40px;}
   #admin-panel{display:none; margin-top:20px;}
+  .admin-window{margin:0 0 24px; padding:16px; border-radius:12px; background:var(--bg-subtle);}
+  .admin-window-title{margin:0 0 10px; font-weight:700; font-size:0.95rem;}
+  .admin-window-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin-bottom:12px;}
+  .admin-window-field{display:flex; flex-direction:column; gap:4px; font-size:0.84rem; color:var(--ink-muted);}
+  .admin-window-field input{padding:10px 12px; border-radius:9px; border:1px solid var(--divider); background:var(--bg-panel); color:var(--ink-on-navy); font:inherit; font-size:0.95rem; min-height:44px;}
+  .admin-window-btns{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+  .admin-window-hint{margin:10px 0 0; font-size:0.8rem; color:var(--ink-muted);}
   #admin-panel.is-visible{display:block;}
   .admin-date-list{list-style:none; margin:0 0 20px; padding:0; display:flex; flex-direction:column; gap:8px;}
   .admin-date-row{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:var(--bg-subtle); border:1px solid var(--divider); border-radius:10px;}
@@ -226,10 +233,7 @@ var BLOCKED_EMAIL_DOMAIN = '@gm.cyut.edu.tw';
 // need a second round-trip to the backend just to re-fetch the same number.
 var DEFAULT_SLOT_CAPACITY_FALLBACK = 25;
 
-// ▼ 開放登記時間（台灣時間，格式 'YYYY-MM-DD HH:mm'）
-//   開始前不能登記、截止後不能再登記；兩個都留空 = 不限制時間
-var REG_OPEN  = '';   // 例：'2026-10-20 12:00'
-var REG_CLOSE = '';   // 例：'2026-10-25 23:59'
+// 開放登記時間：在本頁「管理面板」設定，存在 Google 那邊，這裡不用改。
 
 var appState = { dates: [] };
 var selectedDateId = null;
@@ -242,7 +246,7 @@ function $(id){ return document.getElementById(id); }
 
 // ---------- 開放登記時間 ----------
 function parseTW(s){ return s ? new Date(s.replace(' ', 'T') + ':00+08:00') : null; }
-var regOpenAt = parseTW(REG_OPEN), regCloseAt = parseTW(REG_CLOSE);
+var regOpenAt = null, regCloseAt = null;
 var serverOffset = 0;   // 用伺服器時間校正，避免手機時間不準
 function nowMs(){ return Date.now() + serverOffset; }
 function regStatus(){
@@ -263,6 +267,15 @@ function fmtLeft(ms){
   return (d ? d + ' 天 ' : '') + (d || h ? h + ' 小時 ' : '') + m + ' 分 ' + sec + ' 秒';
 }
 var lastRegStatus = null;
+// 從 Google 回傳的資料讀取開放時間，並用伺服器時間校正
+function applyServerWindow(data){
+  if (!data || !('regOpen' in data)) return;
+  regOpenAt = parseTW(data.regOpen || '');
+  regCloseAt = parseTW(data.regClose || '');
+  if (data.serverNow) serverOffset = data.serverNow - Date.now();
+  lastRegStatus = null;
+  renderRegWindow();
+}
 function renderRegWindow(){
   var box = $('reg-window');
   if (!regOpenAt && !regCloseAt){ box.hidden = true; return; }
@@ -351,6 +364,7 @@ async function loadState(){
       return;
     }
     appState = data;
+    applyServerWindow(data);
     renderPicker();
   } catch (e){
     showMessage('error', '無法連線到報名系統，請確認網路連線，或稍後再試一次。');
@@ -475,6 +489,7 @@ async function handleSubmitClick(){
       studentId: sid, name: name, className: className, phone: phone, email: email
     });
     submitting = false;
+    applyServerWindow(res);
     renderSubmitButton();
     if (res && res.ok){
       showMessage('success', res.message || '預約成功！');
@@ -518,6 +533,7 @@ async function adminAction(payload){
     var res = await apiPost(payload);
     if (res && res.ok){
       adminData = res;
+      applyServerWindow(res);
       renderAdminPanel();
       appState = buildAppStateFromAdminData(res);
       renderPicker();
@@ -550,6 +566,7 @@ async function attemptAdminLogin(key){
     if (res && res.ok){
       adminKey = key;
       adminData = res;
+      applyServerWindow(res);
       try { localStorage.setItem('gpb_admin_key', key); } catch (e) {}
       $('admin-login').style.display = 'none';
       $('admin-toggle-link').style.display = 'none';
@@ -596,6 +613,52 @@ function renderAdminPanel(){
   headerRow.appendChild(closeBtn);
 
   section.appendChild(headerRow);
+
+  // ---- 開放登記時間 ----
+  var winBox = document.createElement('div');
+  winBox.className = 'admin-window';
+  var winTitle = document.createElement('p');
+  winTitle.className = 'admin-window-title';
+  winTitle.textContent = '開放登記時間（台灣時間）';
+  winBox.appendChild(winTitle);
+  var toInput = function(v){ return v ? v.replace(' ', 'T') : ''; };
+  var fromInput = function(v){ return v ? v.replace('T', ' ').slice(0, 16) : ''; };
+  var mkField = function(labelText, value){
+    var wrap = document.createElement('label');
+    wrap.className = 'admin-window-field';
+    var span = document.createElement('span'); span.textContent = labelText;
+    var inp = document.createElement('input'); inp.type = 'datetime-local'; inp.value = toInput(value);
+    wrap.appendChild(span); wrap.appendChild(inp);
+    return { wrap: wrap, input: inp };
+  };
+  var fOpen = mkField('開放時間', adminData.regOpen || '');
+  var fClose = mkField('截止時間', adminData.regClose || '');
+  var winRow = document.createElement('div');
+  winRow.className = 'admin-window-row';
+  winRow.appendChild(fOpen.wrap); winRow.appendChild(fClose.wrap);
+  winBox.appendChild(winRow);
+  var winBtns = document.createElement('div');
+  winBtns.className = 'admin-window-btns';
+  var saveWin = document.createElement('button');
+  saveWin.type = 'button'; saveWin.className = 'btn btn-primary'; saveWin.textContent = '儲存開放時間';
+  saveWin.addEventListener('click', function(){
+    var o = fromInput(fOpen.input.value), c = fromInput(fClose.input.value);
+    if (o && c && o >= c){ showMessage('error', '截止時間要晚於開放時間。'); return; }
+    adminAction({ action: 'admin_set_window', adminKey: adminKey, regOpen: o, regClose: c });
+  });
+  var clearWin = document.createElement('button');
+  clearWin.type = 'button'; clearWin.className = 'admin-close-btn'; clearWin.textContent = '取消時間限制';
+  clearWin.addEventListener('click', function(){
+    if (!confirm('確定要取消時間限制嗎？取消後隨時都能登記。')) return;
+    adminAction({ action: 'admin_set_window', adminKey: adminKey, regOpen: '', regClose: '' });
+  });
+  winBtns.appendChild(saveWin); winBtns.appendChild(clearWin);
+  winBox.appendChild(winBtns);
+  var winHint = document.createElement('p');
+  winHint.className = 'admin-window-hint';
+  winHint.textContent = '只填截止時間＝現在起開放到截止；兩個都空白＝不限制。';
+  winBox.appendChild(winHint);
+  section.appendChild(winBox);
 
   var addLabel = document.createElement('label');
   addLabel.textContent = '新增個人畢業照日期（自動產生完整時段表）';
@@ -794,10 +857,7 @@ function init(){
   // 開放登記時間：每秒更新倒數，時間一到自動開放／關閉
   renderRegWindow();
   setInterval(renderRegWindow, 1000);
-  fetch(location.href.split('#')[0], { method: 'HEAD', cache: 'no-store' }).then(function(r){
-    var d = r.headers.get('Date');
-    if (d){ serverOffset = new Date(d).getTime() - Date.now(); renderRegWindow(); }
-  }).catch(function(){});
+
 
   try {
     var savedKey = localStorage.getItem('gpb_admin_key');
