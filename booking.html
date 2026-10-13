@@ -62,7 +62,7 @@
   .reg-window .reg-state{font-weight:700; font-size:0.95rem; padding:6px 14px; border-radius:999px; white-space:nowrap;}
   .reg-window.is-before .reg-state{background:var(--bg-subtle); color:var(--gold-deep);}
   .reg-window.is-open .reg-state{background:var(--success-bg); color:#2F6B45;}
-  .reg-window.is-after .reg-state{background:var(--error-bg); color:var(--error);}
+  .reg-window.is-after .reg-state, .reg-window.is-paused .reg-state{background:var(--error-bg); color:var(--error);}
   .reg-window .reg-count{flex-basis:100%; margin:0; font-size:0.9rem; color:var(--ink-muted); font-variant-numeric:tabular-nums;}
   .reg-window .reg-count:empty{display:none;}
   .reg-locked input, .reg-locked select{opacity:.55;}
@@ -120,6 +120,14 @@
   .admin-window-field input{padding:10px 12px; border-radius:9px; border:1px solid var(--divider); background:var(--bg-panel); color:var(--ink-on-navy); font:inherit; font-size:0.95rem; min-height:44px;}
   .admin-window-btns{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
   .admin-window-hint{margin:10px 0 0; font-size:0.8rem; color:var(--ink-muted);}
+  .admin-switch{display:inline-flex; padding:4px; gap:4px; border-radius:999px; background:var(--bg-panel); border:1px solid var(--divider); margin-bottom:14px;}
+  .admin-switch button{font:inherit; font-weight:700; font-size:0.92rem; min-height:40px; padding:0 18px; border-radius:999px; border:none; background:transparent; color:var(--ink-muted); cursor:pointer;}
+  .admin-switch button[aria-checked="true"]:first-child{background:#2F6B45; color:#fff;}
+  .admin-switch button[aria-checked="true"]:last-child{background:var(--error); color:#fff;}
+  .admin-window-line{display:flex; gap:6px;}
+  .admin-window-line input{flex:1; min-width:0;}
+  .admin-clear{font:inherit; font-size:0.82rem; padding:0 12px; border-radius:9px; border:1px solid var(--divider); background:var(--bg-panel); color:var(--ink-muted); cursor:pointer;}
+  .admin-window-row.is-off{opacity:.45;}
   #admin-panel.is-visible{display:block;}
   .admin-date-list{list-style:none; margin:0 0 20px; padding:0; display:flex; flex-direction:column; gap:8px;}
   .admin-date-row{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:var(--bg-subtle); border:1px solid var(--divider); border-radius:10px;}
@@ -246,10 +254,11 @@ function $(id){ return document.getElementById(id); }
 
 // ---------- 開放登記時間 ----------
 function parseTW(s){ return s ? new Date(s.replace(' ', 'T') + ':00+08:00') : null; }
-var regOpenAt = null, regCloseAt = null;
+var regOpenAt = null, regCloseAt = null, regEnabled = true;
 var serverOffset = 0;   // 用伺服器時間校正，避免手機時間不準
 function nowMs(){ return Date.now() + serverOffset; }
 function regStatus(){
+  if (!regEnabled) return 'paused';
   var t = nowMs();
   if (regOpenAt && t < regOpenAt.getTime()) return 'before';
   if (regCloseAt && t > regCloseAt.getTime()) return 'after';
@@ -270,6 +279,7 @@ var lastRegStatus = null;
 // 從 Google 回傳的資料讀取開放時間，並用伺服器時間校正
 function applyServerWindow(data){
   if (!data || !('regOpen' in data)) return;
+  regEnabled = data.regEnabled !== false;
   regOpenAt = parseTW(data.regOpen || '');
   regCloseAt = parseTW(data.regClose || '');
   if (data.serverNow) serverOffset = data.serverNow - Date.now();
@@ -278,12 +288,15 @@ function applyServerWindow(data){
 }
 function renderRegWindow(){
   var box = $('reg-window');
-  if (!regOpenAt && !regCloseAt){ box.hidden = true; return; }
+  var st = regStatus();
+  if (st !== 'paused' && !regOpenAt && !regCloseAt){ box.hidden = true; if (st !== lastRegStatus){ lastRegStatus = st; lockForm(false); } return; }
   box.hidden = false;
   $('reg-range').textContent = (regOpenAt ? fmtTW(regOpenAt) : '即日起') + ' – ' + (regCloseAt ? fmtTW(regCloseAt) : '額滿為止');
-  var st = regStatus();
   box.className = 'reg-window is-' + st;
-  if (st === 'before'){
+  if (st === 'paused'){
+    $('reg-state').textContent = '暫停報名';
+    $('reg-count').textContent = '目前暫停報名，開放時會公告在畢聯會 IG @cyutgsa。';
+  } else if (st === 'before'){
     $('reg-state').textContent = '尚未開放';
     $('reg-count').textContent = '距離開放還有 ' + fmtLeft(regOpenAt.getTime() - nowMs());
   } else if (st === 'open'){
@@ -456,13 +469,14 @@ function renderSubmitButton(){
   var btn = $('submit-btn');
   var st = regStatus();
   btn.disabled = submitting || st !== 'open';
-  btn.textContent = submitting ? '送出中…' : (st === 'before' ? '尚未開放登記' : st === 'after' ? '登記已截止' : '確認預約這個時段');
+  btn.textContent = submitting ? '送出中…' : (st === 'paused' ? '目前暫停報名' : st === 'before' ? '尚未開放登記' : st === 'after' ? '登記已截止' : '確認預約這個時段');
 }
 
 async function handleSubmitClick(){
   if (submitting) return;
   clearMessage();
   var rs = regStatus();
+  if (rs === 'paused'){ showMessage('error', '目前暫停報名。'); return; }
   if (rs === 'before'){ showMessage('error', '尚未開放登記，' + fmtTW(regOpenAt) + ' 開放。'); return; }
   if (rs === 'after'){ showMessage('error', '登記已截止，無法再登記。'); return; }
   var className = $('f-class').value.trim();
@@ -614,13 +628,36 @@ function renderAdminPanel(){
 
   section.appendChild(headerRow);
 
-  // ---- 開放登記時間 ----
+  // ---- 報名設定：開放／關閉、開始報名時間、結束報名時間 ----
   var winBox = document.createElement('div');
   winBox.className = 'admin-window';
   var winTitle = document.createElement('p');
   winTitle.className = 'admin-window-title';
-  winTitle.textContent = '開放登記時間（台灣時間）';
+  winTitle.textContent = '報名設定';
   winBox.appendChild(winTitle);
+
+  var enabledNow = adminData.regEnabled !== false;
+  var sw = document.createElement('div');
+  sw.className = 'admin-switch';
+  sw.setAttribute('role', 'radiogroup');
+  sw.setAttribute('aria-label', '報名開關');
+  var mkOpt = function(text, val){
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = text;
+    b.setAttribute('role', 'radio');
+    b.setAttribute('aria-checked', String(enabledNow === val));
+    b.addEventListener('click', function(){
+      enabledNow = val;
+      sw.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-checked', 'false'); });
+      b.setAttribute('aria-checked', 'true');
+      timeRow.classList.toggle('is-off', !val);
+    });
+    return b;
+  };
+  sw.appendChild(mkOpt('開放報名', true));
+  sw.appendChild(mkOpt('關閉報名', false));
+  winBox.appendChild(sw);
+
   var toInput = function(v){ return v ? v.replace(' ', 'T') : ''; };
   var fromInput = function(v){ return v ? v.replace('T', ' ').slice(0, 16) : ''; };
   var mkField = function(labelText, value){
@@ -628,35 +665,31 @@ function renderAdminPanel(){
     wrap.className = 'admin-window-field';
     var span = document.createElement('span'); span.textContent = labelText;
     var inp = document.createElement('input'); inp.type = 'datetime-local'; inp.value = toInput(value);
-    wrap.appendChild(span); wrap.appendChild(inp);
+    var clr = document.createElement('button'); clr.type = 'button'; clr.className = 'admin-clear'; clr.textContent = '清除';
+    clr.addEventListener('click', function(e){ e.preventDefault(); inp.value = ''; });
+    var line = document.createElement('div'); line.className = 'admin-window-line';
+    line.appendChild(inp); line.appendChild(clr);
+    wrap.appendChild(span); wrap.appendChild(line);
     return { wrap: wrap, input: inp };
   };
-  var fOpen = mkField('開放時間', adminData.regOpen || '');
-  var fClose = mkField('截止時間', adminData.regClose || '');
-  var winRow = document.createElement('div');
-  winRow.className = 'admin-window-row';
-  winRow.appendChild(fOpen.wrap); winRow.appendChild(fClose.wrap);
-  winBox.appendChild(winRow);
-  var winBtns = document.createElement('div');
-  winBtns.className = 'admin-window-btns';
+  var fOpen = mkField('開始報名時間', adminData.regOpen || '');
+  var fClose = mkField('結束報名時間', adminData.regClose || '');
+  var timeRow = document.createElement('div');
+  timeRow.className = 'admin-window-row' + (enabledNow ? '' : ' is-off');
+  timeRow.appendChild(fOpen.wrap); timeRow.appendChild(fClose.wrap);
+  winBox.appendChild(timeRow);
+
   var saveWin = document.createElement('button');
-  saveWin.type = 'button'; saveWin.className = 'btn btn-primary'; saveWin.textContent = '儲存開放時間';
+  saveWin.type = 'button'; saveWin.className = 'btn btn-primary'; saveWin.textContent = '儲存報名設定';
   saveWin.addEventListener('click', function(){
     var o = fromInput(fOpen.input.value), c = fromInput(fClose.input.value);
-    if (o && c && o >= c){ showMessage('error', '截止時間要晚於開放時間。'); return; }
-    adminAction({ action: 'admin_set_window', adminKey: adminKey, regOpen: o, regClose: c });
+    if (o && c && o >= c){ showMessage('error', '結束報名時間要晚於開始報名時間。'); return; }
+    adminAction({ action: 'admin_set_window', adminKey: adminKey, regEnabled: enabledNow, regOpen: o, regClose: c });
   });
-  var clearWin = document.createElement('button');
-  clearWin.type = 'button'; clearWin.className = 'admin-close-btn'; clearWin.textContent = '取消時間限制';
-  clearWin.addEventListener('click', function(){
-    if (!confirm('確定要取消時間限制嗎？取消後隨時都能登記。')) return;
-    adminAction({ action: 'admin_set_window', adminKey: adminKey, regOpen: '', regClose: '' });
-  });
-  winBtns.appendChild(saveWin); winBtns.appendChild(clearWin);
-  winBox.appendChild(winBtns);
+  winBox.appendChild(saveWin);
   var winHint = document.createElement('p');
   winHint.className = 'admin-window-hint';
-  winHint.textContent = '只填截止時間＝現在起開放到截止；兩個都空白＝不限制。';
+  winHint.textContent = '選「開放報名」時：時間都空白＝現在就開放、不會截止；只填結束時間＝現在開放到結束時間。選「關閉報名」＝不管時間，馬上停止報名。時間都是台灣時間。';
   winBox.appendChild(winHint);
   section.appendChild(winBox);
 
