@@ -583,7 +583,7 @@ async function attemptAdminLogin(key){
       adminKey = key;
       adminData = res;
       applyServerWindow(res);
-      try { localStorage.setItem('gpb_admin_key', key); } catch (e) {}
+      try { localStorage.removeItem('gpb_admin_key'); } catch (e) {}   // 不記住密碼
       $('admin-login').style.display = 'none';
       $('admin-toggle-link').style.display = 'none';
       renderAdminPanel();
@@ -595,13 +595,20 @@ async function attemptAdminLogin(key){
   }
 }
 
+// 關閉管理面板＝登出：下次要再打開，必須重新輸入管理密碼
 function closeAdminPanel(){
   var panel = $('admin-panel');
   panel.classList.remove('is-visible');
   panel.innerHTML = '';
+  adminKey = null;
+  adminData = null;
+  try { localStorage.removeItem('gpb_admin_key'); } catch (e) {}
+  $('admin-key-input').value = '';
+  var err = $('admin-key-error'); if (err) err.remove();
+  $('admin-login').style.display = 'none';
   var link = $('admin-toggle-link');
   link.style.display = 'inline-block';
-  link.textContent = (adminKey && adminData) ? '管理面板' : '管理者登入';
+  link.textContent = '管理者登入';
 }
 
 function renderAdminPanel(){
@@ -912,10 +919,7 @@ function init(){
   setInterval(renderRegWindow, 1000);
 
 
-  try {
-    var savedKey = localStorage.getItem('gpb_admin_key');
-    if (savedKey) attemptAdminLogin(savedKey);
-  } catch (e) {}
+  try { localStorage.removeItem('gpb_admin_key'); } catch (e) {}   // 清掉舊版記住的密碼
 }
 
 if (document.readyState === 'loading'){
