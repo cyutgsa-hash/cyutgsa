@@ -119,7 +119,7 @@
   .admin-window-field{display:flex; flex-direction:column; gap:4px; font-size:0.84rem; color:var(--ink-muted);}
   .admin-window-field input{padding:10px 12px; border-radius:9px; border:1px solid var(--divider); background:var(--bg-panel); color:var(--ink-on-navy); font:inherit; font-size:0.95rem; min-height:44px;}
   .admin-window-btns{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
-  .admin-window-hint{margin:10px 0 0; font-size:0.8rem; color:var(--ink-muted);}
+  .admin-window-hint{margin:12px 0 0; font-size:0.9rem; color:var(--ink-on-navy); line-height:1.6;}
   .admin-switch{display:inline-flex; padding:4px; gap:4px; border-radius:999px; background:var(--bg-panel); border:1px solid var(--divider); margin-bottom:14px;}
   .admin-switch button{font:inherit; font-weight:700; font-size:0.92rem; min-height:40px; padding:0 18px; border-radius:999px; border:none; background:transparent; color:var(--ink-muted); cursor:pointer;}
   .admin-switch button[aria-checked="true"]:first-child{background:#2F6B45; color:#fff;}
@@ -128,6 +128,8 @@
   .admin-window-line input{flex:1; min-width:0;}
   .admin-clear{font:inherit; font-size:0.82rem; padding:0 12px; border-radius:9px; border:1px solid var(--divider); background:var(--bg-panel); color:var(--ink-muted); cursor:pointer;}
   .admin-window-row.is-off{opacity:.45;}
+  .admin-window-hint b{color:var(--ink-on-navy);}
+  .admin-dirty{display:block; margin-top:2px; color:var(--error); font-weight:700;}
   #admin-panel.is-visible{display:block;}
   .admin-date-list{list-style:none; margin:0 0 20px; padding:0; display:flex; flex-direction:column; gap:8px;}
   .admin-date-row{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:var(--bg-subtle); border:1px solid var(--divider); border-radius:10px;}
@@ -651,6 +653,7 @@ function renderAdminPanel(){
       sw.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-checked', 'false'); });
       b.setAttribute('aria-checked', 'true');
       timeRow.classList.toggle('is-off', !val);
+      describe();
     });
     return b;
   };
@@ -689,8 +692,25 @@ function renderAdminPanel(){
   winBox.appendChild(saveWin);
   var winHint = document.createElement('p');
   winHint.className = 'admin-window-hint';
-  winHint.textContent = '選「開放報名」時：時間都空白＝現在就開放、不會截止；只填結束時間＝現在開放到結束時間。選「關閉報名」＝不管時間，馬上停止報名。時間都是台灣時間。';
   winBox.appendChild(winHint);
+  // 用白話說明「照目前的設定，同學什麼時候能報名」，改設定時即時更新
+  var describe = function(){
+    var o = parseTW(fromInput(fOpen.input.value)), c = parseTW(fromInput(fClose.input.value));
+    var txt;
+    if (!enabledNow) txt = '同學現在不能報名（不管上面的時間）。';
+    else if (!o && !c) txt = '同學現在就能報名，不會自動截止。';
+    else if (o && c) txt = '同學只能在 ' + fmtTW(o) + ' 到 ' + fmtTW(c) + ' 之間報名。';
+    else if (o) txt = '同學從 ' + fmtTW(o) + ' 開始能報名，不會自動截止。';
+    else txt = '同學現在就能報名，到 ' + fmtTW(c) + ' 截止。';
+    var dirty = enabledNow !== (adminData.regEnabled !== false) || fromInput(fOpen.input.value) !== (adminData.regOpen || '') || fromInput(fClose.input.value) !== (adminData.regClose || '');
+    winHint.innerHTML = '';
+    var b = document.createElement('b'); b.textContent = '照這個設定：';
+    winHint.appendChild(b); winHint.appendChild(document.createTextNode(txt));
+    if (dirty){ var w = document.createElement('span'); w.className = 'admin-dirty'; w.textContent = '（還沒儲存，按「儲存報名設定」才會生效）'; winHint.appendChild(w); }
+  };
+  [fOpen.input, fClose.input].forEach(function(inp){ inp.addEventListener('input', describe); inp.addEventListener('change', describe); });
+  winBox.querySelectorAll('.admin-clear').forEach(function(b){ b.addEventListener('click', describe); });
+  describe();
   section.appendChild(winBox);
 
   var addLabel = document.createElement('label');
