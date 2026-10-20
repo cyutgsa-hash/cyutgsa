@@ -160,9 +160,9 @@
     </div>
     <p class="lede" style="color: red; font-weight: bold;">每個時段限額 20 人，額滿即自動關閉；每人只能預約一次，送出後無法自行更改，請確認清楚再送出。</p>
     <div class="rules">
-      <div><strong>09:00–12:00</strong>上午時段</div>
-      <div><strong>12:00–13:00</strong>休息，不開放</div>
-      <div><strong>13:00–18:00</strong>下午時段</div>
+      <div><strong>09:20–12:00</strong>上午時段</div>
+      <div><strong>12:00–13:10</strong>午休，不開放</div>
+      <div><strong>13:10–17:00</strong>下午時段</div>
       <div><strong>每時段 20 人</strong>額滿關閉</div>
     </div>
   </header>
@@ -527,14 +527,13 @@ async function handleSubmitClick(){
 // ---------- Admin ----------
 
 var STANDARD_SLOTS = [
-  { id: 's1', start: '09:00', end: '10:00' },
-  { id: 's2', start: '10:00', end: '11:00' },
-  { id: 's3', start: '11:00', end: '12:00' },
-  { id: 's4', start: '13:00', end: '14:00' },
-  { id: 's5', start: '14:00', end: '15:00' },
-  { id: 's6', start: '15:00', end: '16:00' },
-  { id: 's7', start: '16:00', end: '17:00' },
-  { id: 's8', start: '17:00', end: '18:00' }
+  { id: 's1', start: '09:20', end: '10:00' },
+  { id: 's2', start: '10:10', end: '11:00' },
+  { id: 's3', start: '11:10', end: '12:00' },
+  { id: 's4', start: '13:10', end: '14:00' },
+  { id: 's5', start: '14:10', end: '15:00' },
+  { id: 's6', start: '15:10', end: '16:00' },
+  { id: 's7', start: '16:10', end: '17:00' }
 ];
 function slotRangeById(slotId){
   var s = STANDARD_SLOTS.find(function(x){ return x.id === slotId; });
@@ -864,9 +863,11 @@ function renderAdminPanel(){
   panel.appendChild(section);
 }
 
+// 第一天不開放的時段（要和 Code.gs 的 FIRST_DAY_CLOSED_SLOTS 一樣）
+var FIRST_DAY_CLOSED_SLOTS = ['s1'];
 function buildAppStateFromAdminData(data){
-  var dates = data.dates.map(function(d){
-    var slots = STANDARD_SLOTS.map(function(t){
+  var dates = data.dates.map(function(d, idx){
+    var slots = STANDARD_SLOTS.filter(function(t){ return !(idx === 0 && FIRST_DAY_CLOSED_SLOTS.indexOf(t.id) !== -1); }).map(function(t){
       var inSlot = data.bookings.filter(function(b){ return b.dateId === d.id && b.slotId === t.id; });
       return {
         id: t.id, start: t.start, end: t.end, capacity: DEFAULT_SLOT_CAPACITY_FALLBACK,
