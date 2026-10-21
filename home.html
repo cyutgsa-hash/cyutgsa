@@ -77,6 +77,13 @@ nav a:hover{color:var(--accent)}
 .card .meta span{color:var(--muted)}
 .card h3{font-size:22px;line-height:1.5}
 .card p{color:var(--text)}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:16px}
+.facts dt{font-weight:700;color:var(--accent)}
+.facts dd{margin:0;color:var(--text)}
+.card details.more{border-bottom:none;border-top:1px solid var(--line)}
+.card .more summary{cursor:pointer;font-weight:700;font-size:16px;color:var(--accent);min-height:44px;padding:8px 0;display:flex;align-items:center;justify-content:space-between}
+.card .more summary::after{font-size:22px}
+.more ul{margin:4px 0 0;padding-left:1.2em;color:var(--text);display:grid;gap:8px;font-size:15px;line-height:1.75}
 
 /* schedule */
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:2px solid var(--ink);list-style:none;margin:0;padding:0}
@@ -266,9 +273,21 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
         <p>[公告內容摘要：拍攝地點、登記方式、注意事項]</p>
       </article>
       <article class="card">
-        <div class="meta"><b>學士服</b><span>[公告日期]</span></div>
-        <h3>學士服發放與歸還說明</h3>
-        <p>[公告內容摘要：領取時間、地點、需攜帶證件、押金]</p>
+        <div class="meta"><b>學士服</b><span>2026/10/21</span></div>
+        <h3>學士服發放說明</h3>
+        <dl class="facts">
+          <dt>發放</dt><dd>11/7（六）– 11/8（日）09:00–20:00</dd>
+          <dt>補發</dt><dd>11/9（一）– 11/13（五）</dd>
+          <dt>攜帶</dt><dd>學生證（實體、電子都可以）</dd>
+        </dl>
+        <details class="more">
+          <summary>代領方式與注意事項</summary>
+          <ul>
+            <li><b>幫別人代領</b>：要寫委託書，並帶雙方的學生證（實體、電子都可以）。委託書上要有班級、學號、姓名、電話，可以現場填寫。</li>
+            <li>簽到時會通知你的尺寸，領取時務必告訴發放的工作人員。大三沒有登記套量表的同學，現場有尺寸參考表可以選。</li>
+            <li><b>領取後請當場仔細檢查</b>，離開教室後就不能退換。代領的同學也要幫忙檢查。</li>
+          </ul>
+        </details>
       </article>
       <article class="card">
         <div class="meta"><b>活動</b><span>[公告日期]</span></div>
@@ -287,7 +306,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
     <ol class="tl" id="timeline">
       <li class="tl-month" aria-hidden="true">10 月</li>
       <li class="tl-item" data-start="2026-10-12" data-end="2026-10-13"><div class="tl-date"><b>10/12–13</b><small>（一）–（二）</small></div><div class="tl-body"><h3>捐血活動</h3><span class="tl-tag"></span></div></li>
-      <li class="tl-item" data-start="2026-10-21" data-end="2026-10-21"><div class="tl-date"><b>10/29</b><small>（三）</small></div><div class="tl-body"><h3>萬聖節活動</h3><span class="tl-tag"></span></div></li>
+      <li class="tl-item" data-start="2026-10-21" data-end="2026-10-21"><div class="tl-date"><b>10/21</b><small>（三）</small></div><div class="tl-body"><h3>萬聖節活動</h3><span class="tl-tag"></span></div></li>
       <li class="tl-month" aria-hidden="true">11 月</li>
       <li class="tl-item" data-start="2026-11-03" data-end="2026-11-03"><div class="tl-date"><b>11/3</b><small>（二）</small></div><div class="tl-body"><h3>第二次畢代大會</h3><span class="tl-tag"></span></div></li>
       <li class="tl-item" data-start="2026-11-07" data-end="2026-11-08"><div class="tl-date"><b>11/7–8</b><small>（六）–（日）</small></div><div class="tl-body"><h3>學士服發放</h3><span class="tl-tag"></span></div></li>
@@ -364,7 +383,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
       <p>找不到答案？直接私訊 IG，值班幹部會盡快回覆。</p>
     </div>
     <div class="qa">
-      <details open><summary>學士服要去哪裡領？需要帶什麼？</summary><p>[畢聯會辦公室]。請攜帶學生證，押金與歸還期限請見 IG 公告。</p></details>
+      <details open><summary>學士服要去哪裡領？需要帶什麼？</summary><p>11/7（六）– 11/8（日）09:00–20:00 在 [發放地點] 發放，11/9（一）– 11/13（五）可以補發。請帶學生證（實體、電子都可以）；幫別人代領要寫委託書，並帶雙方的學生證。領取後請當場檢查，離開教室後就不能退換。</p></details>
       <details><summary>畢業照和大團拍的時間怎麼查？</summary><p>所有拍攝日期都會在 IG @cyutgsa 公告，也會同步更新在本頁的「重要活動預定表」。</p></details>
       <details><summary>錯過了自己班級的拍攝時段怎麼辦？</summary><p>[補拍規則]。請盡快私訊畢聯會 IG，我們會協助安排。</p></details>
       <details><summary>畢業紀念品怎麼預購、怎麼付款？</summary><p>[預購表單連結與付款方式]。</p></details>
@@ -379,7 +398,7 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
       <a href="https://www.instagram.com/cyutgsa/" target="_blank" rel="noopener">Instagram　@cyutgsa</a>
     </div>
     <dl><dt>會辦位置</dt><dd>第一宿舍大樓 10F（R-1011）</dd><dt>值班時間</dt><dd>每週二至週四 13:30–20:00</dd><dt>聯絡電話</dt><dd><a class="mail" href="tel:+886423323000,1269">(04) 2332-3000</a><br>分機 1269、1270</dd></dl>
-    <dl><dt>聯絡信箱</dt><dd><a class="mail" href="mailto:cyutgsa@gmail.com">cyutgsa@gmail.com</a></dd><dt>學校地址</dt><dd>413台中市霧峰區吉峰東路 168 號</dd></dl>
+    <dl><dt>聯絡信箱</dt><dd><a class="mail" href="mailto:cyutgsa@gmail.com">cyutgsa@gmail.com</a></dd><dt>學校地址</dt><dd>台中市霧峰區吉峰東路 168 號</dd></dl>
   </div>
   <div class="copy"><span>© 朝陽科技大學畢業班學生聯誼會</span><span>Chaoyang University of Technology</span></div>
 </footer>
