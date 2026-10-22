@@ -83,7 +83,7 @@ nav a:hover{color:var(--accent)}
 .card details.more{border-bottom:none;border-top:1px solid var(--line)}
 .card .more summary{cursor:pointer;font-weight:700;font-size:16px;color:var(--accent);min-height:44px;padding:8px 0;display:flex;align-items:center;justify-content:space-between}
 .card .more summary::after{font-size:22px}
-.more ul{margin:4px 0 0;padding-left:1.2em;color:var(--text);display:grid;gap:8px;font-size:15px;line-height:1.75}
+.more ul,.more ol{margin:4px 0 0;padding-left:1.4em;color:var(--text);display:grid;gap:8px;font-size:15px;line-height:1.75}
 
 /* schedule */
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:2px solid var(--ink);list-style:none;margin:0;padding:0}
@@ -270,9 +270,22 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
     </div>
     <div class="grid3">
       <article class="card">
-        <div class="meta"><b>拍攝</b><span>[公告日期]</span></div>
-        <h3>學士照拍攝時段開放登記</h3>
-        <p>[公告內容摘要：拍攝地點、登記方式、注意事項]</p>
+        <div class="meta"><b>學位照</b><span>2026/10/22</span></div>
+        <h3>學位照拍攝說明</h3>
+        <dl class="facts">
+          <dt>拍攝</dt><dd>R1115</dd>
+          <dt>休息室</dt><dd>R1111</dd>
+          <dt>登記</dt><dd>畢聯會發給各班的預約連結</dd>
+        </dl>
+        <details class="more">
+          <summary>注意事項</summary>
+          <ol>
+            <li>建議穿著圓領襯衫。</li>
+            <li>先到 R1111 休息室穿好學碩士服（限朝陽學碩士服）。</li>
+            <li>當天依照你個人預約的時間拍攝。</li>
+            <li>拍完挑選照片，確認無誤後再離開。</li>
+          </ol>
+        </details>
       </article>
       <article class="card">
         <div class="meta"><b>學士服</b><span>2026/10/21</span></div>
@@ -292,9 +305,15 @@ footer{background:var(--ink);color:var(--ground);padding:96px var(--pad) 48px}
         </details>
       </article>
       <article class="card">
-        <div class="meta"><b>活動</b><span>[公告日期]</span></div>
-        <h3>畢業大團拍集合通知</h3>
-        <p>[公告內容摘要：集合時間、地點、服裝、雨備方案]</p>
+        <div class="meta"><b>團拍</b><span>2026/10/22</span></div>
+        <h3>畢業團拍集合通知</h3>
+        <dl class="facts">
+          <dt>日期</dt><dd>11/30（一）– 12/11（五）</dd>
+          <dt>集合</dt><dd>依畢聯會公布的各班時段</dd>
+          <dt>地點</dt><dd>第一宿舍門口</dd>
+          <dt>服裝</dt><dd>學生服</dd>
+          <dt>雨備</dt><dd>無</dd>
+        </dl>
       </article>
     </div>
   </section>
