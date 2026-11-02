@@ -141,8 +141,11 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
         show("none", "暫時無法查詢", "系統忙碌中，請稍後再試。");
       } else if (!res.found) {
         show("none", "查無資料", "請確認學號和姓名是否輸入正確。確定沒打錯的話，請私訊畢聯會 IG。");
+      } else if (res.refunded) {
+        show("no", "已退費", "你已申請畢聯會費退費。如果有疑問，請私訊畢聯會 IG。");
       } else if (res.paid) {
-        show("ok", "已繳費", res.date ? "繳費日期：" + res.date : "感謝你的支持！");
+        const detail = [res.date ? "繳費日期：" + res.date : "", res.way ? "繳費方式：" + res.way : ""].filter(Boolean).join("　");
+        show("ok", "已繳費", detail || "感謝你的支持！");
       } else {
         show("no", "尚未繳費", "繳費方式請見畢聯會 IG 公告。已經繳了的話，請帶收據私訊 IG。");
       }
