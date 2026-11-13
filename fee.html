@@ -114,6 +114,13 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
   // ▼ 貼上 Google Apps Script「網頁應用程式」的網址（https://script.google.com/macros/s/.../exec）
   const API_URL = "https://script.google.com/macros/s/AKfycbzyPiotVq0nVFH8naZokSnZ9vmyvlmmuULeboTLHz1kyb0-qLpzZvDA9CGfaZwy3-Pn/exec";
 
+  // ▼ 繳費方案：繳納金額對應的內容
+  const PLANS = {
+    1800: "含學碩士服租借、個人照、團拍",
+    2650: "含學碩士服租借、個人照、團拍",
+    700:  "含個人照、團拍"
+  };
+
   const $ = id => document.getElementById(id);
   const clean = s => s.normalize("NFKC").replace(/\s+/g, "");
   const CLOSED = "名單尚未開放查詢，請留意畢聯會 IG 公告。";
@@ -148,7 +155,7 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
       } else if (res.refunded) {
         show("no", "已退費", "你已申請畢聯會費退費。如果有疑問，請私訊畢聯會 IG。", res.name);
       } else if (res.paid) {
-        const detail = [res.date ? "繳費日期：" + res.date : "", res.way ? "繳費方式：" + res.way : "", res.gown ? "學士服：" + res.gown : ""].filter(Boolean).join("\n");
+        const detail = [res.amount ? "繳納金額：" + Number(res.amount).toLocaleString("zh-TW") + " 元" + (PLANS[res.amount] ? "（" + PLANS[res.amount] + "）" : "") : "", res.date ? "繳費日期：" + res.date : "", res.way ? "繳費方式：" + res.way : "", res.gown ? "學士服：" + res.gown : ""].filter(Boolean).join("\n");
         show("ok", "已繳費", detail || "感謝你的支持！", res.name);
       } else {
         show("no", "尚未繳費", "繳費方式請見畢聯會 IG 公告。已經繳了的話，請帶收據私訊 IG。", res.name);
