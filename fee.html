@@ -49,6 +49,9 @@ button:disabled{opacity:.55;cursor:wait}
 
 .result{border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:6px}
 .result[hidden]{display:none}
+.result p{white-space:pre-line}
+.result .who{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:.05em}
+label small{font-weight:400;color:var(--muted)}
 .result .status{font-family:var(--serif);font-weight:900;font-size:32px;line-height:1.3}
 .result.ok{background:var(--ok-bg);color:var(--ok)}
 .result.no{background:var(--no-bg);color:var(--no)}
@@ -77,9 +80,9 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
 <main>
   <div class="intro">
     <h1>會費查詢</h1>
-    <p>輸入學號和姓名，確認自己是否已繳交畢聯會會費。</p>
+    <p>輸入學號就能查詢是否已繳交畢聯會會費。</p>
     <ul>
-      <li>姓名請輸入完整中文姓名。</li>
+      <li>查詢結果會顯示部分隱藏的姓名（例如 王O明），請確認是不是你本人。</li>
       <li>名單由畢聯會幹部登記，剛繳費可能要過一兩天才查得到。</li>
       <li>查詢結果有誤，請帶繳費收據私訊 <a href="https://www.instagram.com/cyutgsa/" target="_blank" rel="noopener">IG @cyutgsa</a>，或在值班時間（每週二至週四 13:30–20:00）到第一宿舍大樓 10F R-1011 會辦找我們。</li>
     </ul>
@@ -90,8 +93,8 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
       <label>學號
         <input id="sid" name="sid" autocomplete="off" inputmode="text" autocapitalize="characters" spellcheck="false" required placeholder="例如 11112345">
       </label>
-      <label>姓名
-        <input id="sname" name="sname" autocomplete="name" required placeholder="例如 王小明">
+      <label>姓名 <small>選填，填了會一起核對</small>
+        <input id="sname" name="sname" autocomplete="name" placeholder="例如 王小明">
       </label>
       <button id="go" type="submit">查詢</button>
     </form>
@@ -117,10 +120,11 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
 
   $("meta").textContent = API_URL ? "名單直接連線畢聯會的 Google 試算表，隨時更新。" : CLOSED;
 
-  function show(cls, status, detail) {
+  function show(cls, status, detail, who) {
     const r = $("result");
     r.className = "result " + cls;
     r.innerHTML = "";
+    if (who) { const w = document.createElement("span"); w.className = "who"; w.textContent = who + " 同學"; r.append(w); }
     const s = document.createElement("span"); s.className = "status"; s.textContent = status;
     const p = document.createElement("p"); p.textContent = detail;
     r.append(s, p);
@@ -130,24 +134,24 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
   $("form").addEventListener("submit", async e => {
     e.preventDefault();
     const id = clean($("sid").value).toUpperCase(), name = clean($("sname").value);
-    if (!id || !name) { show("none", "請輸入學號和姓名", "兩個欄位都要填才能查詢。"); return; }
+    if (!id) { show("none", "請輸入學號", "輸入學號才能查詢。"); return; }
     if (!API_URL) { show("none", "名單尚未開放", "畢聯會還沒開放查詢，請留意 IG 公告。"); return; }
 
     $("go").disabled = true; $("go").textContent = "查詢中…";
     try {
-      const url = API_URL + "?id=" + encodeURIComponent(id) + "&name=" + encodeURIComponent(name);
+      const url = API_URL + "?id=" + encodeURIComponent(id) + (name ? "&name=" + encodeURIComponent(name) : "");
       const res = await (await fetch(url)).json();
       if (res.error) {
         show("none", "暫時無法查詢", "系統忙碌中，請稍後再試。");
       } else if (!res.found) {
-        show("none", "查無資料", "請確認學號和姓名是否輸入正確。確定沒打錯的話，請私訊畢聯會 IG。");
+        show("none", "查無資料", name ? "請確認學號和姓名是否輸入正確。確定沒打錯的話，請私訊畢聯會 IG。" : "請確認學號是否輸入正確。確定沒打錯的話，請私訊畢聯會 IG。");
       } else if (res.refunded) {
-        show("no", "已退費", "你已申請畢聯會費退費。如果有疑問，請私訊畢聯會 IG。");
+        show("no", "已退費", "你已申請畢聯會費退費。如果有疑問，請私訊畢聯會 IG。", res.name);
       } else if (res.paid) {
-        const detail = [res.date ? "繳費日期：" + res.date : "", res.way ? "繳費方式：" + res.way : ""].filter(Boolean).join("　");
-        show("ok", "已繳費", detail || "感謝你的支持！");
+        const detail = [res.date ? "繳費日期：" + res.date : "", res.way ? "繳費方式：" + res.way : ""].filter(Boolean).join("\n");
+        show("ok", "已繳費", detail || "感謝你的支持！", res.name);
       } else {
-        show("no", "尚未繳費", "繳費方式請見畢聯會 IG 公告。已經繳了的話，請帶收據私訊 IG。");
+        show("no", "尚未繳費", "繳費方式請見畢聯會 IG 公告。已經繳了的話，請帶收據私訊 IG。", res.name);
       }
     } catch (err) {
       show("none", "暫時無法查詢", "連線失敗，請檢查網路後再試一次。");
