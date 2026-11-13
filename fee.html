@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>會費・學士服查詢｜朝陽科技大學 畢聯會</title>
+<title>會費・學碩士服查詢｜朝陽科技大學 畢聯會</title>
 <meta name="description" content="朝陽科技大學畢業班學生聯誼會：畢聯會會費繳費查詢。">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -79,8 +79,8 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
 
 <main>
   <div class="intro">
-    <h1>會費・學士服查詢</h1>
-    <p>輸入學號，就能查詢是否已繳交畢聯會會費，以及學士服是否已經領取。</p>
+    <h1>會費・學碩士服查詢</h1>
+    <p>輸入學號，就能查詢是否已繳交畢聯會會費，以及學碩士服是否已經領取。</p>
     <ul>
       <li>查詢結果會顯示部分隱藏的姓名（例如 王O明），請確認是不是你本人。</li>
       <li>名單由畢聯會幹部登記，剛繳費可能要過一兩天才查得到。</li>
@@ -155,7 +155,7 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
       } else if (res.refunded) {
         show("no", "已退費", "你已申請畢聯會費退費。如果有疑問，請私訊畢聯會 IG。", res.name);
       } else if (res.paid) {
-        const detail = [res.amount ? "繳納金額：" + Number(res.amount).toLocaleString("zh-TW") + " 元" + (PLANS[res.amount] ? "（" + PLANS[res.amount] + "）" : "") : "", res.date ? "繳費日期：" + res.date : "", res.way ? "繳費方式：" + res.way : "", res.gown ? "學士服：" + res.gown : ""].filter(Boolean).join("\n");
+        const detail = [res.amount ? "繳納金額：" + Number(res.amount).toLocaleString("zh-TW") + " 元" + (PLANS[res.amount] ? "（" + PLANS[res.amount] + "）" : "") : "", res.date ? "繳費日期：" + res.date : "", res.way ? "繳費方式：" + res.way : "", res.gown ? "學碩士服：" + res.gown : ""].filter(Boolean).join("\n");
         show("ok", "已繳費", detail || "感謝你的支持！", res.name);
       } else {
         show("no", "尚未繳費", "繳費方式請見畢聯會 IG 公告。已經繳了的話，請帶收據私訊 IG。", res.name);
