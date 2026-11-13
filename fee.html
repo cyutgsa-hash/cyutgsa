@@ -112,7 +112,7 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
 
 <script>
   // ▼ 貼上 Google Apps Script「網頁應用程式」的網址（https://script.google.com/macros/s/.../exec）
-  const API_URL = "https://script.google.com/macros/s/AKfycbzkd46hD1zFEY6zpd4WQpAVvN3ABLlGMHKzaOCejS5PdzMUs0JOsLrabO43QcxurAiu0Q/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzyPiotVq0nVFH8naZokSnZ9vmyvlmmuULeboTLHz1kyb0-qLpzZvDA9CGfaZwy3-Pn/exec";
 
   const $ = id => document.getElementById(id);
   const clean = s => s.normalize("NFKC").replace(/\s+/g, "");
@@ -148,7 +148,7 @@ footer{padding:24px var(--pad);border-top:1px solid var(--line);font-size:14px;c
       } else if (res.refunded) {
         show("no", "已退費", "你已申請畢聯會費退費。如果有疑問，請私訊畢聯會 IG。", res.name);
       } else if (res.paid) {
-        const detail = [res.date ? "繳費日期：" + res.date : "", res.way ? "繳費方式：" + res.way : ""].filter(Boolean).join("\n");
+        const detail = [res.date ? "繳費日期：" + res.date : "", res.way ? "繳費方式：" + res.way : "", res.gown ? "學士服：" + res.gown : ""].filter(Boolean).join("\n");
         show("ok", "已繳費", detail || "感謝你的支持！", res.name);
       } else {
         show("no", "尚未繳費", "繳費方式請見畢聯會 IG 公告。已經繳了的話，請帶收據私訊 IG。", res.name);
